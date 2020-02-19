@@ -7,3 +7,4 @@
   roles:
     - ping
     - java-install
+    - jenkins-install
