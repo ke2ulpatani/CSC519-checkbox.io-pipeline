@@ -1,0 +1,24 @@
+---
+# tasks file for jenkins-install
+- name: Add an apt signing key for Jenkins
+  apt_key:
+    url: https://pkg.jenkins.io/debian/jenkins.io.key
+    state: present
+
+- name: Create Jenkins list file and binary link to it
+  lineinfile:
+    path: /etc/apt/sources.list.d/jenkins.list
+    line: deb https://pkg.jenkins.io/debian-stable binary/
+    create: yes
+
+- name: Run the equivalent of "apt-get update"
+  apt:
+    update_cache: yes
+
+- name: Install Jenkins
+  apt: name=jenkins state=latest
+
+- name: Ensure Jenkins is installed.
+  apt:
+    name: jenkins
+    state: present

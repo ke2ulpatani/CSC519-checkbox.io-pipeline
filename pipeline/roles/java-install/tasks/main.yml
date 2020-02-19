@@ -1,0 +1,15 @@
+---
+# tasks file for java-install
+- name: Run the equivalent of "apt-get upgrade"
+  apt:
+    upgrade: dist
+
+- name: Run the equivalent of "apt-get update"
+  apt:
+    update_cache: yes
+
+- name: Install Oracle Java 11
+  apt: name={{item}} state=latest
+  with_items:
+    - default-jdk
+    - ca-certificates
