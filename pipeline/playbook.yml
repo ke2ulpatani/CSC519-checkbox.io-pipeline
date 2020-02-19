@@ -3,5 +3,7 @@
 # https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html
 
 - hosts: jenkins
+  become: yes
   roles:
     - ping
+    - java-install
