@@ -1,0 +1,18 @@
+---
+# tasks file for jenkins-job-builder-install
+- name: Run the equivalent of "apt-get update"
+  apt:
+    update_cache: yes
+
+- name: Install python3-pip
+  apt: name=python3-pip state=latest
+
+- name: Install Jenkins Job Builder.
+  pip:
+    name: jenkins-job-builder
+
+- name: Ensure Jenkins Job Builder is installed.
+  pip:
+    name: jenkins
+    state: present
+
