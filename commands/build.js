@@ -1,7 +1,10 @@
 const chalk = require('chalk');
 // const JENKINS_IP = 192.168.33.20;
+// const JENKINS_PORT = "9000";
 const JENKINS_IP = "192.168.44.80";
-const jenkins = require('jenkins')({ baseUrl: `http://admin:adminadmin@${JENKINS_IP}:8080`, crumbIssuer: true, promisify: true });
+const JENKINS_PORT = "8080";
+
+const jenkins = require('jenkins')({ baseUrl: `http://admin:adminadmin@${JENKINS_IP}:${JENKINS_PORT}`, crumbIssuer: true, promisify: true });
 
 exports.command = 'build <jobName>';
 exports.desc = 'Trigger a build job with given jobName, wait for output, and print build log.';

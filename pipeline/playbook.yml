@@ -10,6 +10,7 @@
     - ping
     - java-install
     - jenkins-install
+    - jenkins-job-builder-install
     - nodejs-install
     - mongodb-install
     - mongodb-configure
