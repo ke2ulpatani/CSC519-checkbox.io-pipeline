@@ -1,0 +1,17 @@
+---
+# tasks file for mongodb-install
+- name: Import MongoDB public GPG Key
+  apt_key:
+    keyserver: hkp://keyserver.ubuntu.com:80
+    id: D68FA50FEA312927
+
+- name: Add MongoDB repository into sources list
+  lineinfile:
+    dest: /etc/apt/sources.list.d/mongodb-org-3.2.list
+    line: "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse"
+    create: yes
+
+- name: Install MongoDB
+  apt:
+    name: mongodb-org
+    update_cache: yes
