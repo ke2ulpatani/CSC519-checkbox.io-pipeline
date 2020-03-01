@@ -4,8 +4,6 @@
 
 - hosts: jenkins
   become: yes
-  vars_files:
-    - vars-mongodb.yml
   roles:
     - ping
     - java-install
@@ -13,4 +11,5 @@
     - jenkins-job-builder-install
     - nodejs-install
     - mongodb-install
+    - env-vars
     - mongodb-configure

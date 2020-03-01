@@ -1,0 +1,9 @@
+---
+# tasks file for pipeline/roles/env-vars
+- name: Set MongoDB env vars
+  lineinfile:
+    dest: "/etc/environment"
+    state: present
+    regexp: "^{{ item.key }}="
+    line: "{{ item.key }}={{ item.value}}"
+  with_items: "{{ mongodb_environment }}"
