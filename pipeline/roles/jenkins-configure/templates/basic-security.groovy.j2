@@ -1,0 +1,14 @@
+#!groovy
+
+import jenkins.model.*
+import hudson.security.*
+
+def instance = Jenkins.getInstance()
+def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+
+hudsonRealm.createAccount("admin","12345")
+instance.setSecurityRealm(hudsonRealm)
+def loggedInAuthorization = new hudson.security.FullControlOnceLoggedInAuthorizationStrategy()
+loggedInAuthorization.setAllowAnonymous(true)
+instance.setAuthorizationStrategy(loggedInAuthorization)
+instance.save()

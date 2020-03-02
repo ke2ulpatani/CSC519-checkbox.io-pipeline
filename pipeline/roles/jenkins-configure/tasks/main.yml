@@ -1,0 +1,42 @@
+---
+# tasks file for pipeline/roles/jenkins-configure
+- name: Change Jenkins port
+  lineinfile:
+    dest: "/etc/default/jenkins"
+    state: present
+    regexp: "^HTTP_PORT="
+    line: "HTTP_PORT=9000"
+
+- name: Disable setup wizard
+  lineinfile:
+    dest: "/etc/default/jenkins"
+    state: present
+    regexp: "^JAVA_ARGS="
+    line: JAVA_ARGS="-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
+
+- name: Add dir for groovy script
+  file:
+    path: /var/lib/jenkins/init.groovy.d
+    state: directory
+    mode: 0755
+
+- name: Copying groovy script from template
+  template:
+    force: yes
+    src: ../templates/basic-security.groovy.j2
+    dest: /var/lib/jenkins/init.groovy.d/basic-security.groovy
+
+- name: Restart Jenkins
+  service:
+    name: jenkins
+    state: restarted
+
+- name: Wait for Jenkins to restart
+  wait_for:
+    port: 9000
+    delay: 15
+
+- name: Delete grovvy script
+  file:
+    path: /var/lib/jenkins/init.groovy.d/basic-security.groovy
+    state: absent
