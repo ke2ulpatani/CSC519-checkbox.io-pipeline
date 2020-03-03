@@ -1,0 +1,15 @@
+- name: Copying checkboxio pipeline template for build job
+  template:
+    force: yes
+    src: ../templates/checkboxio-pipeline.yml.j2
+    dest: /home/vagrant/checkboxio-pipeline.yml
+
+- name: Copying jenkins_jobs configuration file to create the job
+  template:
+    force: yes
+    src: ../templates/jenkins_jobs.ini.j2
+    dest: /home/vagrant/jenkins_jobs.ini
+
+- name: create jenkins jobs using jenkins-job-builder
+  command:
+    cmd: jenkins-jobs --conf /home/vagrant/jenkins_jobs.ini --user admin --password 12345 update /home/vagrant/checkboxio-pipeline.yml
