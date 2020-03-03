@@ -16,7 +16,9 @@
     update_cache: yes
 
 - name: Install Jenkins
-  apt: name=jenkins state=latest
+  apt:
+    name: jenkins
+    state: latest
 
 - name: Ensure Jenkins is installed.
   apt:

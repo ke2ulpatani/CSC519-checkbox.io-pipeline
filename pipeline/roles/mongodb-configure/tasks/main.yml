@@ -1,10 +1,5 @@
 ---
 # tasks file for pipeline/roles/mongodb-configure
-- name: Install pip
-  apt:
-    pkg: python-pip
-    state: present
-
 - name: Install pymongo
   command: pip install pymongo
 
@@ -15,7 +10,7 @@
 - name: Run the equivalent of "apt-get update"
   apt:
     update_cache: yes
-
+    
 - name: Start MongoDB
   service:
     name: mongod
