@@ -10,7 +10,7 @@
 - name: Run the equivalent of "apt-get update"
   apt:
     update_cache: yes
-    
+
 - name: Start MongoDB
   service:
     name: mongod
@@ -19,8 +19,8 @@
 - name: Create MongoDB user
   mongodb_user:
     database: admin
-    name: "admin"
-    password: "12345"
+    name: "{{ mongodb_username }}"
+    password: "{{ mongodb_password }}"
     roles: readWrite
     state: present
 

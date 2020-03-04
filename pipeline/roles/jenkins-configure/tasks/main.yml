@@ -44,8 +44,8 @@
 - name: Install jenkins plugins
   jenkins_plugin:
     name: "{{ item }}"
-    url_username: "admin"
-    url_password: "12345"
+    url_username: "{{ jenkins_username }}"
+    url_password: "{{ jenkins_password }}"
     url: "http://192.168.33.20:9000"
     timeout: 60
   with_items: [build-pipeline-plugin, build-timeout, credentials-binding, timestamper, ws-cleanup, workflow-aggregator, github-branch-source, pipeline-github-lib, pipeline-stage-view, git, subversion, ssh-slaves]

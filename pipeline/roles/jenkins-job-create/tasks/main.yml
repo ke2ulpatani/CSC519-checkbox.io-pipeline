@@ -12,4 +12,4 @@
 
 - name: create jenkins jobs using jenkins-job-builder
   command:
-    cmd: jenkins-jobs --conf /home/vagrant/jenkins_jobs.ini --user admin --password 12345 update /home/vagrant/checkboxio-pipeline.yml
+    cmd: jenkins-jobs --conf /home/vagrant/jenkins_jobs.ini --user {{ jenkins_username }} --password {{ jenkins_password }} update /home/vagrant/checkboxio-pipeline.yml

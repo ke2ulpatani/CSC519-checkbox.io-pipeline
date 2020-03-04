@@ -7,12 +7,15 @@ import jenkins.install.InstallState;
 def instance = Jenkins.getInstance()
 def hudsonRealm = new HudsonPrivateSecurityRealm(false)
 
-hudsonRealm.createAccount("admin","12345")
+hudsonRealm.createAccount("{{ jenkins_username }}","{{ jenkins_password }}")
+
 instance.setSecurityRealm(hudsonRealm)
 def loggedInAuthorization = new hudson.security.FullControlOnceLoggedInAuthorizationStrategy()
 loggedInAuthorization.setAllowAnonymous(true)
+
 instance.setAuthorizationStrategy(loggedInAuthorization)
 if (!instance.installState.isSetupComplete()) {
   InstallState.INITIAL_SETUP_COMPLETED.initializeState()
 }
+
 instance.save()

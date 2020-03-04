@@ -7,3 +7,4 @@
     regexp: "^{{ item.key }}="
     line: "{{ item.key }}={{ item.value}}"
   with_items: "{{ mongodb_environment }}"
+  no_log: true
