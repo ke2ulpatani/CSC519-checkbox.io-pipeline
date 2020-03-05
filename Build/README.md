@@ -38,7 +38,7 @@ In order to protect credentials, they're are managed using :
 | Shift pipeline build from jenkins (workshop) VM to jenkins-srv | [Issue #13](https://github.ncsu.edu/cscdevops-spring2020/DEVOPS-10/Issue/13) |
 
 ## Current Snapshot of the Project Board:
-![img](imgs/build_milestone_project_board.png)
+![img](../imgs/build_milestone_project_board.png)
 
 ## Screencast
-![]()
+[Screencast Video](https://drive.google.com/open?id=1fCF1fJTuE-TnvXc0Pq80S0OMo9cfMXGD)
