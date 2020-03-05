@@ -6,5 +6,5 @@
 3. Ketul Patani
 
 ## Build Milestone
-- [Checkpoint Report](Build Milestone/CHECKPOINT.md)
-- [Milestone Report](Build Milestone/BUILD.md)
+- [Checkpoint Report](Build/CHECKPOINT.md)
+- [Milestone Report](Build/BUILD.md)

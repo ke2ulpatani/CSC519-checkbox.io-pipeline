@@ -24,7 +24,7 @@ Also, we implemented `pipeline build <buildJobName>` command which triggers a bu
 | Integrate playbook with node application cli command | [Issue #7](https://github.ncsu.edu/cscdevops-spring2020/DEVOPS-10/Issue/7) |
 
 ## Current Snapshot of the Project Board:
-![img](imgs/milestone1_project_board_checkpoint1.png)
+![img](../imgs/milestone1_project_board_checkpoint1.png)
 
 
 # Checkpoint 2
@@ -52,4 +52,4 @@ We are not required to complete configuration of the jenkins server and create a
 | Shift pipeline build from jenkins (workshop) VM to jenkins-srv | [Issue #13](https://github.ncsu.edu/cscdevops-spring2020/DEVOPS-10/Issue/13) |
 
 ## Current Snapshot of the Project Board:
-![img](imgs/milestone1_project_board_checkpoint2.png)
+![img](../imgs/milestone1_project_board_checkpoint2.png)
