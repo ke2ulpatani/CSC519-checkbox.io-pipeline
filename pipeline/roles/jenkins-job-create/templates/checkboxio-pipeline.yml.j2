@@ -1,0 +1,24 @@
+- job:
+    name: checkbox.io
+    project-type: pipeline
+    dsl: |
+        node {
+            stage('Source') {
+                git 'https://github.com/chrisparnin/checkbox.io'
+            }
+            stage('Build') {
+                sh 'cd server-side/site/ && npm install'
+            }
+            stage('DB') {
+                sh 'sudo service mongod start'
+            }
+            stage('Start service') {
+                sh 'cd server-side/site/ && pm2 start server.js'
+            }
+            stage('Test') {
+                sh 'cd server-side/site/ && npm test'
+            }
+            stage('TearDown') {
+                sh 'pm2 stop server'
+            }
+        }

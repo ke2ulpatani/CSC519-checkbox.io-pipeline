@@ -1,10 +1,10 @@
 const chalk = require('chalk');
-// const JENKINS_IP = 192.168.33.20;
-// const JENKINS_PORT = "9000";
-const JENKINS_IP = "192.168.44.80";
-const JENKINS_PORT = "8080";
+const JENKINS_IP = "192.168.33.20";
+const JENKINS_PORT = "9000";
+// const JENKINS_IP = "192.168.44.80";
+// const JENKINS_PORT = "8080";
 
-const jenkins = require('jenkins')({ baseUrl: `http://admin:adminadmin@${JENKINS_IP}:${JENKINS_PORT}`, crumbIssuer: true, promisify: true });
+const jenkins = require('jenkins')({ baseUrl: `http://admin:12345@${JENKINS_IP}:${JENKINS_PORT}`, crumbIssuer: true, promisify: true });
 
 exports.command = 'build <jobName>';
 exports.desc = 'Trigger a build job with given jobName, wait for output, and print build log.';
@@ -29,13 +29,13 @@ async function getBuildStatus(job, id) {
     return new Promise(async function(resolve, reject)
     {
         // console.log(`Fetching ${job}: ${id}`);
-        //wait till build is complete. use while loop or wait till log is complete
 
-        // let buildData={building: true};
-        // while(buildData.building)
-        //     buildData = await jenkins.build.get(job, id);
+        //wait till build is complete. use while loop or wait till log is generated
+        let buildData={building: true};
+        while(buildData.building)
+            buildData = await jenkins.build.get(job, id);
 
-        await jenkins.build.log({name: job, number: id});
+        // await jenkins.build.log({name: job, number: id});
         buildData = await jenkins.build.get(job, id);
 
         resolve(buildData);

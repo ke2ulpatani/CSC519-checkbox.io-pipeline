@@ -7,6 +7,14 @@
     regexp: "^HTTP_PORT="
     line: "HTTP_PORT=9000"
 
+# required to start mongodb service
+- name: allow jenkins user to run sudo commands without password
+  lineinfile:
+    dest: "/etc/sudoers.d/jenkins"
+    state: present
+    create: yes
+    line: "jenkins ALL=(ALL) NOPASSWD: ALL"
+
 - name: Disable setup wizard
   lineinfile:
     dest: "/etc/default/jenkins"
@@ -31,12 +39,47 @@
     name: jenkins
     state: restarted
 
-- name: Wait for Jenkins to restart
-  wait_for:
-    port: 9000
-    delay: 15
+- name: Wait for Jenkins to start up
+  uri:
+    url: http://192.168.33.20:9000/login
+    status_code: 200
+    timeout: 5
+  register: jenkins_service_status
+  # Keep trying for 5 mins in 5 sec intervals
+  retries: 60
+  delay: 5
+  until: >
+      'status' in jenkins_service_status and
+      jenkins_service_status['status'] == 200
 
 - name: Delete grovvy script
   file:
     path: /var/lib/jenkins/init.groovy.d/basic-security.groovy
     state: absent
+
+- name: Install jenkins plugins
+  jenkins_plugin:
+    name: "{{ item }}"
+    url_username: "{{ jenkins_username }}"
+    url_password: "{{ jenkins_password }}"
+    url: "http://192.168.33.20:9000"
+    timeout: 60
+  with_items: [build-pipeline-plugin, build-timeout, credentials-binding, timestamper, ws-cleanup, workflow-aggregator, github-branch-source, pipeline-github-lib, pipeline-stage-view, git, subversion, ssh-slaves]
+
+- name: Restart Jenkins
+  service:
+    name: jenkins
+    state: restarted
+
+- name: Wait for Jenkins to start up
+  uri:
+    url: http://192.168.33.20:9000/login
+    status_code: 200
+    timeout: 5
+  register: jenkins_service_status
+  # Keep trying for 5 mins in 5 sec intervals
+  retries: 60
+  delay: 5
+  until: >
+      'status' in jenkins_service_status and
+      jenkins_service_status['status'] == 200
