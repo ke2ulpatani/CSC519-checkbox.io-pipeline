@@ -6,12 +6,12 @@
   become: yes
   roles:
     - ping
+    - env-vars
     - java-install
     - jenkins-install
     - jenkins-configure
     - jenkins-job-builder-install
     - nodejs-install
     - mongodb-install
-    - env-vars
     - mongodb-configure
     - jenkins-job-create
