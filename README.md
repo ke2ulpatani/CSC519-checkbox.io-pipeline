@@ -1,10 +1,10 @@
 # DEVOPS-10
 
 ## Team Members
-1. Anshul Jethwani
+1. Anshul Jethvani
 2. Maharsh Patel
 3. Ketul Patani
 
 ## Build Milestone
 - [Checkpoint Report](Build/CHECKPOINT.md)
-- [Milestone Report](Build/BUILD.md)
+- [Milestone Report](Build/README.md)
