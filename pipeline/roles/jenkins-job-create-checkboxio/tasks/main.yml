@@ -1,14 +1,3 @@
-- name: Install pm2
-  npm:
-    name: pm2
-    global: yes
-
-- name: Copying jenkins_jobs configuration file to create build jobs
-  template:
-    force: yes
-    src: ../templates/jenkins_jobs.ini.j2
-    dest: /home/vagrant/jenkins_jobs.ini
-    
 - name: Copying checkboxio pipeline template for build job
   template:
     force: yes

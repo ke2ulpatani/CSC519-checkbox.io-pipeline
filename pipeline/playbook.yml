@@ -11,6 +11,7 @@
     - jenkins-install
     - jenkins-configure
     - jenkins-job-builder-install
+    - jenkins-job-builder-configure
     - nodejs-install
     - mongodb-install
     - mongodb-configure
