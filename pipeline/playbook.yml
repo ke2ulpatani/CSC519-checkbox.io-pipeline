@@ -14,4 +14,4 @@
     - nodejs-install
     - mongodb-install
     - mongodb-configure
-    - jenkins-job-create
+    - jenkins-job-create-checkboxio

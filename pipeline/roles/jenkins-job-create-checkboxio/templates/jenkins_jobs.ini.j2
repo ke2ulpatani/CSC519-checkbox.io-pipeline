@@ -8,8 +8,8 @@ allow_duplicates=False
 update=all
 
 [jenkins]
-user=admin
-password=12345
+user={{ jenkins_username }}
+password={{ jenkins_password }}
 url=http://192.168.33.20:9000/
 query_plugins_info=False
 ##### This is deprecated, use job_builder section instead
