@@ -1,0 +1,15 @@
+- job:
+    name: iTrust
+    project-type: pipeline
+    dsl: |
+        node {
+            stage('Source') {
+                git(
+                    credentialsId: 'mycredid',
+                    url: 'https://github.ncsu.edu/engr-csc326-staff/iTrust2-v6.git'
+                )
+            }
+            stage('Check') {
+                sh 'ls -la'
+            }
+        }

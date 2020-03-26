@@ -12,6 +12,8 @@
     - jenkins-configure
     - jenkins-job-builder-install
     - nodejs-install
+    - jenkins-job-builder-configure
     - mongodb-install
     - mongodb-configure
-    - jenkins-job-create
+    - jenkins-job-create-checkboxio
+    - jenkins-job-create-iTrust
