@@ -10,4 +10,4 @@
 - [Milestone Report](Build/README.md)
 
 ## Test Milestone
-- [Checkpoint Report](Build/CHECKPOINT.md)
+- [Checkpoint Report](Test/CHECKPOINT.md)
