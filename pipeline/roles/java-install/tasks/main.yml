@@ -9,7 +9,8 @@
     update_cache: yes
 
 - name: Install Oracle Java 11
-  apt: name={{item}} state=latest
-  with_items:
+  apt:
+    pkg:
     - default-jdk
     - ca-certificates
+    state: latest
