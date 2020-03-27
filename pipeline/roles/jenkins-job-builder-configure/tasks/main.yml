@@ -7,4 +7,4 @@
   template:
     force: yes
     src: ../templates/jenkins_jobs.ini.j2
-    dest: /home/vagrant/jenkins_jobs.ini
+    dest: /home/{{ ansible_user }}/jenkins_jobs.ini
