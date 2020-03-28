@@ -14,23 +14,31 @@ exports.builder = yargs => {
         privateKey: {
             describe: 'Install the provided private key on the configuration server',
             type: 'string'
+        },
+        "gh-user": {
+            describe: 'GitHub username',
+            type: 'string'
+        },
+        "gh-pass": {
+            describe: 'GitHub password',
+            type: 'string'
         }
     });
 };
 
 
 exports.handler = async argv => {
-    const { privateKey } = argv;
+    const { privateKey, ghUser, ghPass } = argv;
 
     (async () => {
 
-        await run( privateKey );
+        await run( privateKey, ghUser, ghPass );
 
     })();
 
 };
 
-async function run(privateKey) {
+async function run(privateKey, ghUser, ghPass) {
 
     console.log(chalk.greenBright('Installing jenkins server!'));
 
@@ -44,7 +52,16 @@ async function run(privateKey) {
     if( result.error ) { console.log(result.error); process.exit( result.status ); }
 
     console.log(chalk.blueBright('Running init script...'));
-    result = sshSync('/bakerx/pipeline/server-init.sh', `vagrant@${JENKINS_IP}`);
+    let init_script_cmd = '/bakerx/pipeline/server-init.sh';
+    if(ghUser || ghUser) {
+        if(ghUser && ghPass) {
+            init_script_cmd = `/bakerx/pipeline/server-init.sh ${ghUser} ${ghPass}`;
+        }
+        else {
+            console.log("BOTH GITHUB USER AND PASSWORD REQUIRED!"); process.exit( 1 );
+        }
+    }
+    result = sshSync(init_script_cmd, `vagrant@${JENKINS_IP}`, 'ignore');
     if( result.error ) { console.log(result.error); process.exit( result.status ); }
 
     let filePath = '/bakerx/pipeline/playbook.yml';
