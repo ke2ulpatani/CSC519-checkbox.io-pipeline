@@ -29,3 +29,15 @@
 - name: Create jenkins build job iTrust using jenkins-job-builder
   command:
     cmd: jenkins-jobs --conf /home/{{ ansible_user }}/jenkins_jobs.ini --user {{ jenkins_username }} --password {{ jenkins_password }} update /home/{{ ansible_user }}/itrust-pipeline.yml
+
+- name: Copying db.properties for iTrust build job
+  template:
+    force: yes
+    src: ../templates/db.properties.j2
+    dest: /tmp/db.properties
+
+- name: Copying email.properties for iTrust build job
+  template:
+    force: yes
+    src: ../templates/email.properties.j2
+    dest: /tmp/email.properties

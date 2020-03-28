@@ -9,7 +9,7 @@
                     url: 'https://github.ncsu.edu/engr-csc326-staff/iTrust2-v6.git'
                 )
             }
-            stage('Check') {
-                sh 'ls -la'
+            stage('Build') {
+                sh 'cd iTrust2/ && cp /tmp/db.properties src/main/java && cp /tmp/email.properties src/main/java && mvn -f pom-data.xml process-test-classes'
             }
         }

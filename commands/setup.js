@@ -35,7 +35,7 @@ async function run(privateKey) {
     console.log(chalk.greenBright('Installing jenkins server!'));
 
     console.log(chalk.blueBright('Provisioning configuration server...'));
-    let result = child.spawnSync(`bakerx`, `run jenkins-srv bionic --ip ${JENKINS_IP} --sync`.split(' '), {shell:true, stdio: 'inherit'} );
+    let result = child.spawnSync(`bakerx`, `run jenkins-srv bionic --ip ${JENKINS_IP} --sync --memory 4096`.split(' '), {shell:true, stdio: 'inherit'} );
     if( result.error ) { console.log(result.error); process.exit( result.status ); }
 
     console.log(chalk.blueBright('Installing privateKey on jenkins server'));
