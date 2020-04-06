@@ -96,7 +96,7 @@ async function complexity(filePath,callback)
 
              visitAST(node, function (child) {
                 
-                if (child.type == 'IfStatement') {
+                if (child.type === 'IfStatement') {
                     builder.ifCounts++;
                     if(builder.ifCounts >5) {
                         console.log("if count exceeded 5 : "+builder.FunctionName+" file: "+filePath);
@@ -111,13 +111,14 @@ async function complexity(filePath,callback)
                             currentChainsCount++;
                         }
                     });
-
-                    builder.maxMessageChainsCount = Math.max(currentChainsCount, builder.maxMessageChainsCount);
+                    if (builder.maxMessageChainsCount < currentChainsCount) {
+                        builder.maxMessageChainsCount = currentChainsCount;
+                    }
                 }
 
             });
 
-            if ((node.loc.start.line - node.loc.start.line) > 100) {
+            if ((node.loc.end.line - node.loc.start.line)+1 > 100) {
                 console.log("long method detected : "+builder.FunctionName+" file: "+filePath);
                 process.exit(1);
             }
