@@ -16,4 +16,6 @@
     - mongodb-install
     - mongodb-configure
     - jenkins-job-create-checkboxio
+    - mysql-install
+    - maven-install
     - jenkins-job-create-iTrust

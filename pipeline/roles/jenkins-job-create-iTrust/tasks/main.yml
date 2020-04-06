@@ -2,30 +2,42 @@
   template:
     force: yes
     src: ../templates/itrust-credential.xml.j2
-    dest: /home/vagrant/itrust-credential.xml
+    dest: /home/{{ ansible_user }}/itrust-credential.xml
 
 - name: Download jenkins jar file for adding credential
   get_url:
     url: http://localhost:9000/jnlpJars/jenkins-cli.jar
-    dest: /home/vagrant/jenkins-cli.jar
+    dest: /home/{{ ansible_user }}/jenkins-cli.jar
 
 - name: Remove credentials if already present for iTrust build job
   shell:
     cmd: java -jar jenkins-cli.jar -auth {{ jenkins_username }}:{{ jenkins_password }} -s http://localhost:9000/ delete-credentials system::system::jenkins _ mycredid
-    chdir: /home/vagrant
+    chdir: /home/{{ ansible_user }}
   ignore_errors: yes
   
 - name: Add credentials in jenkins for iTrust build job
   shell:
     cmd: java -jar jenkins-cli.jar -auth {{ jenkins_username }}:{{ jenkins_password }} -s http://localhost:9000/ create-credentials-by-xml system::system::jenkins _  < itrust-credential.xml
-    chdir: /home/vagrant
+    chdir: /home/{{ ansible_user }}
   
 - name: Copying iTrust pipeline template for build job
   template:
     force: yes
     src: ../templates/itrust-pipeline.yml.j2
-    dest: /home/vagrant/itrust-pipeline.yml
+    dest: /home/{{ ansible_user }}/itrust-pipeline.yml
 
 - name: Create jenkins build job iTrust using jenkins-job-builder
   command:
-    cmd: jenkins-jobs --conf /home/vagrant/jenkins_jobs.ini --user {{ jenkins_username }} --password {{ jenkins_password }} update /home/vagrant/itrust-pipeline.yml
+    cmd: jenkins-jobs --conf /home/{{ ansible_user }}/jenkins_jobs.ini --user {{ jenkins_username }} --password {{ jenkins_password }} update /home/{{ ansible_user }}/itrust-pipeline.yml
+
+- name: Copying db.properties for iTrust build job
+  template:
+    force: yes
+    src: ../templates/db.properties.j2
+    dest: /tmp/db.properties
+
+- name: Copying email.properties for iTrust build job
+  template:
+    force: yes
+    src: ../templates/email.properties.j2
+    dest: /tmp/email.properties

@@ -2,8 +2,8 @@
   template:
     force: yes
     src: ../templates/checkboxio-pipeline.yml.j2
-    dest: /home/vagrant/checkboxio-pipeline.yml
+    dest: /home/{{ ansible_user }}/checkboxio-pipeline.yml
 
 - name: Create jenkins build job checkbox.io using jenkins-job-builder
   command:
-    cmd: jenkins-jobs --conf /home/vagrant/jenkins_jobs.ini --user {{ jenkins_username }} --password {{ jenkins_password }} update /home/vagrant/checkboxio-pipeline.yml
+    cmd: jenkins-jobs --conf /home/{{ ansible_user }}/jenkins_jobs.ini --user {{ jenkins_username }} --password {{ jenkins_password }} update /home/{{ ansible_user }}/checkboxio-pipeline.yml
