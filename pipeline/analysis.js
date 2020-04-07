@@ -33,7 +33,7 @@ function main()
     const result = getFiles(args) 
     for(var i in result) {
         if(result[i].split('.').pop() === "js") {
-            complexity(result[i],function(err) {
+            analyzeFile(result[i],function(err) {
                 // console.log("gone insise "+ result[i]);
                 if(err != null) {
                     console.log("something wrong with "+ result[i]);
@@ -76,11 +76,11 @@ function getFuncName( node )
 function FunctionBuilder()
 {
 	this.FunctionName = "";
-	this.maxMessageChainsCount = 0;
+	this.messageChainsCount = 0;
     this.ifCounts = 0;
 };
 
-async function complexity(filePath,callback)
+async function analyzeFile(filePath,callback)
 {
     var buf = fs.readFileSync(filePath, "utf8");
 	var ast = esprima.parse(buf, options);
@@ -96,7 +96,7 @@ async function complexity(filePath,callback)
 
              visitAST(node, function (child) {
                 
-                if (child.type == 'IfStatement') {
+                if (child.type === 'IfStatement') {
                     builder.ifCounts++;
                     if(builder.ifCounts >5) {
                         console.log("if count exceeded 5 : "+builder.FunctionName+" file: "+filePath);
@@ -105,24 +105,25 @@ async function complexity(filePath,callback)
                 }
                 
                 if (child.type === 'MemberExpression') {
-                    currentChainsCount = 1;
+                    currentChainsCount = 0;
                      visitAST(child.object,function(child) {
                         if(child.type === 'MemberExpression') {
                             currentChainsCount++;
                         }
                     });
-
-                    builder.maxMessageChainsCount = Math.max(currentChainsCount, builder.maxMessageChainsCount);
+                    if (builder.messageChainsCount < currentChainsCount) {
+                        builder.messageChainsCount = currentChainsCount;
+                    }
                 }
 
             });
 
-            if ((node.loc.start.line - node.loc.start.line) > 100) {
+            if ((node.loc.end.line - node.loc.start.line)+1 > 100) {
                 console.log("long method detected : "+builder.FunctionName+" file: "+filePath);
                 process.exit(1);
             }
 
-            if(builder.maxMessageChainsCount > 10) {
+            if(builder.messageChainsCount > 10) {
                 console.log("max chain exceeded 10: "+builder.FunctionName+" file: "+filePath)
                 process.exit(1);
             }
