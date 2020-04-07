@@ -46,7 +46,7 @@ async function run(count) {
   if( result.error ) { process.exit( result.status ); }
 
   console.log(chalk.blueBright('Printing Result'));
-  result = sshSync(`/bakerx/pipeline/run-ansible.sh ${filePath} ${inventoryPath}`, `vagrant@${JENKINS_IP}`);
+  result = sshSync(`/bakerx/testsuite/playbook.yml`, `vagrant@${JENKINS_IP}`);
   if( result.error ) { process.exit( result.status ); }
 
 
