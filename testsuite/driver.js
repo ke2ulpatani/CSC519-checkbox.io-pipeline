@@ -8,7 +8,7 @@ const _random = new Random.Random(Random.MersenneTwister19937.seed(0));
 const glob = require('glob');
 var parser = new xml2js.Parser();
 var hashMap = {};
-
+var iters = process.argv.slice(2)[0];
 
 function fuzz(dir) {
   var args = process.argv.slice(2);
@@ -102,8 +102,8 @@ function readJSON(result)
     return tests;
 }
 
-async function main() {
-  var iters = parseInt(fs.readFileSync(__dirname + "/count", 'utf-8').split("\n"));
+async function main(iters) {
+  //var iters = parseInt(fs.readFileSync(__dirname + "/count", 'utf-8').split("\n"));
   child.execSync(`cd /var/lib/jenkins/workspace/iTrust && git reset --hard HEAD`);
   await child.execSync(`cd /var/lib/jenkins/workspace/iTrust/iTrust2 && sudo mvn -f pom-data.xml process-test-classes && mysql -u root -e 'DROP DATABASE IF EXISTS iTrust2'`);
   for(var i = 1; i <= iters;i++) {
@@ -120,7 +120,7 @@ async function main() {
         var _err = new Buffer(err.stdout).toString("ascii");
         if (_err.includes("Compilation") == true) {
             console.log("Compilation Failed");
-            console.log(err);
+            //console.log(err);
             flag = true;
             currTri++;
         }
@@ -142,7 +142,7 @@ async function main() {
       var datajson = await bluebird.fromCallback(cb => parser.parseString(data, cb));
       var testresult = readJSON(datajson);
       for(test in testresult) {
-        console.log(testresult[test]);
+        //console.log(testresult[test]);
         if (!hashMap.hasOwnProperty(testresult[test].name)) {
             hashMap[testresult[test].name]={pass:0 ,fail:0}
         }
@@ -154,7 +154,7 @@ async function main() {
             hashMap[testresult[test].name].fail++
         }
 
-        console.log(hashMap[testresult[test].name]);
+        //console.log(hashMap[testresult[test].name]);
       }
       index++;
     }
@@ -164,7 +164,7 @@ async function main() {
   finalResult = [];
 
   for (key in hashMap) {
-      console.log(key);
+      //console.log(key);
       finalResult.push({
           name:   key,
           pass:   hashMap[key].pass,
@@ -194,4 +194,4 @@ async function main() {
   return;
 }
 
-main();
+main(iters);

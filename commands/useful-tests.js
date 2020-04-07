@@ -39,15 +39,16 @@ async function run(count) {
 
   fs.writeFile(__dirname + '/../testsuite/count', count.toString(), (err) => { if (err) throw err; });
 
-  let filePath = '/bakerx/testsuite/playbook.yml';
-  let inventoryPath = '/bakerx/pipeline/inventory.ini';
-
-  result = sshSync(`sudo /usr/bin/node /bakerx/testsuite/driver.js --no-warnings`, `vagrant@${JENKINS_IP}`,'ignore');
+  result = sshSync(`sudo /usr/bin/node /bakerx/testsuite/driver.js ${count}`, `vagrant@${JENKINS_IP}`);
   if( result.error ) { process.exit( result.status ); }
 
-  // console.log(chalk.blueBright('Running ansible script...'));
-  // result = sshSync(`/bakerx/pipeline/run-ansible.sh ${filePath} ${inventoryPath}`, `vagrant@${JENKINS_IP}`);
-  // if( result.error ) { process.exit( result.status ); }
+  console.log(chalk.blueBright('Printing Result'));
+
+  let playbookPath ='/bakerx/testsuite/playbook.yml';
+  let inventoryPath = '/bakerx/pipeline/inventory.ini';
+
+  result = sshSync(`ansible-playbook ${playbookPath} -i ${inventoryPath}`, `vagrant@${JENKINS_IP}`);
+  if( result.error ) { process.exit( result.status ); }
 
 
 }

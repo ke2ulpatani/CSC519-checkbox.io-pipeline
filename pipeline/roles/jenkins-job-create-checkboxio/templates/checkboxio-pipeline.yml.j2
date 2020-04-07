@@ -16,7 +16,7 @@
                 sh 'cd server-side/site/ && pm2 start server.js'
             }
             stage('Static Analysis') {
-                sh 'node /bakerx/pipeline/analysis.js $WORKSPACE/server-side/site/'
+                sh 'node /bakerx/pipeline/analysis.js $WORKSPACE/server-side/'
             }
             stage('Test') {
                 sh 'cd server-side/site/ && npm test'
