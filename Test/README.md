@@ -17,7 +17,7 @@ This command runs 100 fuzzy test on ```iTrust``` to detect useful tests by rando
     - swapping 0 with 1 
     - swapping "<" with ">"
 and produces a test report for the same.  
-Note: Currently having some difficulty implementing it. Discussed here: https://stackoverflow.com/c/ncsu/questions/1584. Alternatively, you can run by SSHing into `jenkins-srv` VM and ```echo 100 > /bakerx/testsuites/count && sudo /usr/bin/node /bakerx/testsuite/driver.js```
+
 
 4. `pipeline build checkbox.io`  
 It triggers a build pipeline for ```checkbox.io``` but with an additional static analysis of the code to check if any code smells are detected. Following are the code smells:  
