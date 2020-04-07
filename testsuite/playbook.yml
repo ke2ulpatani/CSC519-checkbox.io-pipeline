@@ -1,0 +1,19 @@
+---
+- hosts: jenkins
+  become: yes
+  tasks:
+  # - name: Install packages based on package.json.
+  #   npm:
+  #     path: /bakerx
+  #
+  # - name: Execute the node scrip
+  #   command:
+  #     cmd: sh /bakerx/testsuite/script.sh
+  #   register: output_last
+  #   # ignore_errors: yes
+  #
+  # - debug: msg="{{ output_last }}"
+  # - name: Execute the node script
+  #   shell:
+  #     cmd: node /bakerx/testsuite/driver.js
+  - debug: msg="{{lookup('file', '/home/vagrant/finalResult.txt') }}"
