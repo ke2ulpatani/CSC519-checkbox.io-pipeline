@@ -120,7 +120,7 @@ async function main() {
         var _err = new Buffer(err.stdout).toString("ascii");
         if (_err.includes("Compilation") == true) {
             console.log("Compilation Failed");
-            console.log(err);
+            //console.log(err);
             flag = true;
             currTri++;
         }
@@ -142,7 +142,7 @@ async function main() {
       var datajson = await bluebird.fromCallback(cb => parser.parseString(data, cb));
       var testresult = readJSON(datajson);
       for(test in testresult) {
-        console.log(testresult[test]);
+        //console.log(testresult[test]);
         if (!hashMap.hasOwnProperty(testresult[test].name)) {
             hashMap[testresult[test].name]={pass:0 ,fail:0}
         }
@@ -154,7 +154,7 @@ async function main() {
             hashMap[testresult[test].name].fail++
         }
 
-        console.log(hashMap[testresult[test].name]);
+        //console.log(hashMap[testresult[test].name]);
       }
       index++;
     }
@@ -164,7 +164,7 @@ async function main() {
   finalResult = [];
 
   for (key in hashMap) {
-      console.log(key);
+      //console.log(key);
       finalResult.push({
           name:   key,
           pass:   hashMap[key].pass,
