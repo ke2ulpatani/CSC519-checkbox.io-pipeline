@@ -57,4 +57,4 @@ In order to protect credentials, they're are managed using :
 ![img](../imgs/test_milestone_project_board.png)
 
 ## Screencast
-[Screencast Video](https://drive.google.com/open?id=1csoX_LufM_iU2fg56dyY8mIwqOKEjHIQ)
+[Screencast Video](https://drive.google.com/open?id=1wMOqPXADzFu7Bst5Q2R2KB4lzJpPd4Ln)
