@@ -1,7 +1,7 @@
 # Test Milestone
 
 ## Discussions
-In this milestone, we discussed on how to iterate over already exsiting code base. We split our work into two parts, one, commands which needed additional functionality such as ```pipeline setup --gh-user <username> --gh-pass <password>```and second commands which needed a separate functionaly such as ```pipeline useful-tests -c 100```. Further, we majorly on splittig the task such that no one is overwhelmed or cause any inter task dependability which could hinder a team member. Since the code base was increasing and getting complex, we started reviewing each other pull request thoroughly and maintained a SDLC ethics. Due to current situations, we couldn't meet daily so we used to have bug session over video calls and try to solve problem together remotely.
+In this milestone, we discussed on how to iterate over already exsiting code base. We splitted our work into two parts, one, commands which needed additional functionality such as ```pipeline setup --gh-user <username> --gh-pass <password>```and second commands which needed a separate functionaly such as ```pipeline useful-tests -c 100```. Further, we majorly focussed on splitting the tasks such that no one is overwhelmed or cause any inter task dependability which could hinder a team member. Since the code base was increasing and getting complex, we started reviewing each other pull request thoroughly and maintained a SDLC ethics. Due to current situations, we couldn't meet daily so we used to have bug session over video calls and try to solve problem together remotely.
 
 ## Implementation
 1. `pipeline setup --gh-user <username> --gh-pass <password>`  
@@ -16,7 +16,8 @@ This command runs 100 fuzzy test on ```iTrust``` to detect useful tests by rando
     - changing content of "strings" in code.
     - swapping 0 with 1 
     - swapping "<" with ">"
-and produces a test report for the same.
+and produces a test report for the same.  
+Note: Currently having some difficulty implementing it. Discussed here: https://stackoverflow.com/c/ncsu/questions/1584. Alternatively, you can run by SSHing into `jenkins-srv` VM and ```echo 100 > /bakerx/testsuites/count && sudo /usr/bin/node /bakerx/testsuite/driver.js```
 
 4. `pipeline build checkbox.io`  
 It triggers a build pipeline for ```checkbox.io``` but with an additional static analysis of the code to check if any code smells are detected. Following are the code smells:  
