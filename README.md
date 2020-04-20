@@ -12,3 +12,6 @@
 ## Test Milestone
 - [Checkpoint Report](Test/CHECKPOINT.md)
 - [Milestone Report](Test/README.md)
+
+## Deploy Milestone
+- [Checkpoint Report](Deploy/CHECKPOINT.md)
