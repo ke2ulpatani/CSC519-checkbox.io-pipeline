@@ -1,0 +1,47 @@
+---
+- name: Creating EC2 Ubuntu instance for iTrust
+  ec2:
+    aws_access_key: "{{ ec2_access_key }}"
+    aws_secret_key: "{{ ec2_secret_key }}"
+    instance_type: t2.micro
+    image: ami-0fc20dd1da406780b
+    region: us-east-2
+    key_name: prod_key
+    count: 1
+    wait: true
+    instance_tags:
+      Name: iTrust-prod
+  register: ec2_iTrust
+
+- name: Creating EC2 Ubuntu instance for checkbox.io
+  ec2:
+    aws_access_key: "{{ ec2_access_key }}"
+    aws_secret_key: "{{ ec2_secret_key }}"
+    instance_type: t2.micro
+    image: ami-0fc20dd1da406780b
+    region: us-east-2
+    key_name: prod_key
+    count: 1
+    wait: true
+    instance_tags:
+      Name: checkbox.io-prod
+  register: ec2_checkbox
+
+- name: Creating EC2 Ubuntu instance for Monitoring
+  ec2:
+    aws_access_key: "{{ ec2_access_key }}"
+    aws_secret_key: "{{ ec2_secret_key }}"
+    instance_type: t2.micro
+    image: ami-0fc20dd1da406780b
+    region: us-east-2
+    key_name: prod_key
+    count: 1
+    wait: true
+    instance_tags:
+      Name: monitor
+  register: ec2_monitor
+
+- name: Template a file to /etc/files.conf
+  template:
+    src: /bakerx/production/roles/ec2-instance/templates/inventory.ini.j2
+    dest: /bakerx/inventory.ini
