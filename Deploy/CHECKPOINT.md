@@ -23,5 +23,5 @@ We have implemented the `pipeline prod up` command to provision instances on AWS
 | Canary test tests analysis | [Issue #49](https://github.ncsu.edu/cscdevops-spring2020/DEVOPS-10/issues/49) |
 
 
-## Current Snapshot of the Project Board[To be implmedted]:
+## Current Snapshot of the Project Board:
 ![img](../imgs/milestone3_project_board_checkpoint1.png)
