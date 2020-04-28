@@ -3,7 +3,7 @@
 We had a planning session on how to goforth with this milestone, and discussed the monitoring and canary part in detail. We again divided the tasks amongst us and made sure we keep them independent of other tasks on our Github Project [deploy](https://github.ncsu.edu/cscdevops-spring2020/DEVOPS-10/projects/3).
 
 ## Goals Achieved
-We have implemented the `pipeline prod up` command to provision instances on AWS using ansible. We are also working on feedback from Miletstone 2 and on our way to implement `pipeline deploy` command and canary tests.
+We have implemented the `pipeline prod up` command to provision instances on AWS using ansible. We are also working on feedback from Miletstone 2 and on our way to implement `pipeline deploy` commands and canary tests.
 
 | Task | Issue |
 | ------ | ------ |
