@@ -7,6 +7,7 @@
     image: ami-0fc20dd1da406780b
     region: us-east-2
     key_name: prod_key
+    group_id: sg-0bfd003365883a796
     count: 1
     wait: true
     instance_tags:
@@ -21,6 +22,7 @@
     image: ami-0fc20dd1da406780b
     region: us-east-2
     key_name: prod_key
+    group_id: sg-0bfd003365883a796
     count: 1
     wait: true
     instance_tags:
@@ -35,6 +37,7 @@
     image: ami-0fc20dd1da406780b
     region: us-east-2
     key_name: prod_key
+    group_id: sg-0bfd003365883a796
     count: 1
     wait: true
     instance_tags:
