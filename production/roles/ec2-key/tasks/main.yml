@@ -1,9 +1,5 @@
 ---
 # tasks file for pipeline/roles/env-vars
-- name: Generate /etc/ssh/ RSA host key
-  command : ssh-keygen -q -t rsa -f /etc/ssh/aws_rsa_key -C "" -N ""
-  args:
-    creates: /etc/ssh/aws_rsa_key
 - name: Remove EC2 Key Pair
   ec2_key:
     aws_access_key: "{{ ec2_access_key }}"
