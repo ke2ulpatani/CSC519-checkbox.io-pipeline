@@ -1,0 +1,4 @@
+---
+# tasks file for nodejs-install
+- name: "Install forever (to run Node.js app)."
+  npm: name=forever global=yes state=present
