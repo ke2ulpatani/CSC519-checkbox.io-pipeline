@@ -20,10 +20,13 @@
     enabled: yes
     state: started
 
-- name: Install pm2
-  npm:
-    name: pm2
-    global: yes
+# - name: Install pm2
+#   npm:
+#     name: pm2
+#     global: yes
 
-- name: Start pm2
-  command: pm2 start /home/{{ ansible_user }}/checkbox.io/server-side/site/server.js
+- name: Start Dashboard app
+  command: forever start --sourceDir /home/{{ ansible_user }}/checkbox.io/server-side/site server.js
+
+# - name: Start pm2
+#   command: pm2 start /home/{{ ansible_user }}/checkbox.io/server-side/site/server.js

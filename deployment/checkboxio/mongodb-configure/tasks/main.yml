@@ -28,6 +28,7 @@
     password: "{{ mongodb_password }}"
     roles: readWrite
     state: present
+  ignore_errors: yes
 
 - name: Ensure MongoDB is running and and enabled to start automatically on reboots
   systemd:

@@ -9,5 +9,6 @@
     - nodejs-install
     - mongodb-install
     - mongodb-configure
+    - forever-install
     - setup-checkbox
     - setup-proxy
