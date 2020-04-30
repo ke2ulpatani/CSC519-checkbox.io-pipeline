@@ -1,0 +1,32 @@
+---
+# tasks file for setup-checkbox
+- name: Cloning checkbox.io repo
+  git:
+    repo: 'https://github.com/chrisparnin/checkbox.io'
+    dest: "/home/{{ ansible_user }}/checkbox.io"
+
+- name: Install node packages
+  npm:
+    executable: /usr/bin/npm
+    path: "/home/{{ ansible_user }}/checkbox.io/server-side/site/"
+
+- name: Reload systemd configs
+  systemd:
+    daemon_reload: yes
+
+- name: Ensure MongoDB is running and and enabled to start automatically on reboots
+  systemd:
+    name: mongod
+    enabled: yes
+    state: started
+
+# - name: Install pm2
+#   npm:
+#     name: pm2
+#     global: yes
+
+- name: Start Dashboard app
+  command: forever start --sourceDir /home/{{ ansible_user }}/checkbox.io/server-side/site server.js
+
+# - name: Start pm2
+#   command: pm2 start /home/{{ ansible_user }}/checkbox.io/server-side/site/server.js
