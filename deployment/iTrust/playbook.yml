@@ -4,6 +4,9 @@
   gather_facts: no
   
   roles:
-    - maven-install
+    # - java-install
+    # - maven-install
     - mysql-install
-    - tomcat-install
+    # - tomcat-install
+    # - build-itrust
+    # - deploy-itrust

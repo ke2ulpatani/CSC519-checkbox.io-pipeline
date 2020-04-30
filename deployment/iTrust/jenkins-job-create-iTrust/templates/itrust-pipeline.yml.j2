@@ -1,0 +1,18 @@
+- job:
+    name: iTrust
+    project-type: pipeline
+    dsl: |
+        node {
+            stage('Source') {
+                git(
+                    credentialsId: 'mycredid',
+                    url: 'https://github.ncsu.edu/engr-csc326-staff/iTrust2-v6.git'
+                )
+            }
+            stage('Build') {
+                sh 'cd iTrust2/ && cp /tmp/db.properties src/main/java && cp /tmp/email.properties src/main/java && mvn -f pom-data.xml process-test-classes'
+            }
+            stage('Test') {
+                sh 'cd iTrust2/ && mvn clean test verify org.apache.maven.plugins:maven-checkstyle-plugin:3.1.0:checkstyle'
+            }
+        }
