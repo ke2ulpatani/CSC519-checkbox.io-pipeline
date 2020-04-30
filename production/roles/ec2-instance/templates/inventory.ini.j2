@@ -1,12 +1,12 @@
 [checkbox.io]
-{{ ec2_checkbox['instances'][0]['public_ip'] }} ansible_ssh_private_key_file=/etc/ssh/aws_ec2.pem   ansible_user=ubuntu
+{{ ec2_checkbox['instances'][0]['public_ip'] }} ansible_ssh_private_key_file=/home/vagrant/aws_ec2.pem   ansible_user=ubuntu
 [checkbox.io:vars]
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 [iTrust]
-{{ ec2_iTrust['instances'][0]['public_ip'] }} ansible_ssh_private_key_file=/etc/ssh/aws_ec2.pem   ansible_user=ubuntu
+{{ ec2_iTrust['instances'][0]['public_ip'] }} ansible_ssh_private_key_file=/home/vagrant/aws_ec2.pem   ansible_user=ubuntu
 [iTrust:vars]
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 [monitor]
-{{ ec2_monitor['instances'][0]['public_ip'] }} ansible_ssh_private_key_file=/etc/ssh/aws_ec2.pem   ansible_user=ubuntu
+{{ ec2_monitor['instances'][0]['public_ip'] }} ansible_ssh_private_key_file=/home/vagrant/aws_ec2.pem   ansible_user=ubuntu
 [monitor:vars]
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'

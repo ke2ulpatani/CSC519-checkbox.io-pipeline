@@ -16,4 +16,4 @@
     force: true
   register: ec2_key_result
 - name: Save private key
-  copy: content="{{ ec2_key_result.key.private_key }}" dest="/etc/ssh/aws_ec2.pem" mode=0400
+  copy: content="{{ ec2_key_result.key.private_key }}" dest="/home/vagrant/aws_ec2.pem" mode=0400
