@@ -2,6 +2,8 @@ const redis = require('redis');
 const util  = require('util');
 const os = require('os');
 const si = require('systeminformation');
+const fs = require('fs');
+const path = require('path');
 
 let monitor = ''
 try
@@ -42,6 +44,7 @@ class Agent
 
 async function main(name)
 {
+    console.log(monitor);
     let agent = new Agent();
 
     let connection = redis.createClient(6379, `${monitor}`, {})
