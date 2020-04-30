@@ -11,5 +11,14 @@
   apt:
     name: redis-server
     state: present
+- name: Replace a localhost entry with our own
+  lineinfile:
+    path: /etc/redis/redis.conf
+    regexp: '^127\.0\.0\.1'
+    line: 0.0.0.0 ::1
+- name: Restart service redis
+  service:
+    name: redis
+    state: restarted
 - name: Start Dashboard app
   command: forever start /home/ubuntu/dashboard/bin/www
