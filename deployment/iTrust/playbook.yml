@@ -1,0 +1,9 @@
+---
+- hosts: iTrust
+  become: yes
+  gather_facts: no
+  
+  roles:
+    - maven-install
+    - mysql-install
+    - tomcat-install

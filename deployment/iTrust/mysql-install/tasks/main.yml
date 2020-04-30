@@ -1,0 +1,39 @@
+---
+# tasks file for mysql-server-install
+- name: Install the MySQL packages
+  apt:
+    pkg:
+      - mysql-server
+      - python-mysqldb
+      - libmysqlclient-dev
+    state: latest
+    update_cache: yes
+
+- name: Sets the root password 
+  mysql_user:
+    name: root
+    password: "{{ mysql_root_pass }}"
+    host: localhost
+
+- name: Copy the root credentials as .my.cnf file
+  template:
+    src: ../templates/root.cnf.j2
+    dest: "{{ item }}"
+    mode: 0600
+  with_items:
+    - '/home/{{ ansible_user }}/.my.cnf'
+    - '/root/.my.cnf'
+
+- name: Ensure Anonymous user(s) are not in the database
+  mysql_user:
+    name: ''
+    host: "{{ item }}"
+    state: absent
+  with_items:
+    - 'localhost'
+    - '{{ ansible_hostname }}'
+
+- name: Remove the test database
+  mysql_db:
+    name: test
+    state: absent

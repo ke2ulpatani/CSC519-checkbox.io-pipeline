@@ -1,0 +1,26 @@
+---
+- name: Install nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Setup nginx config
+  template:
+    src: ../templates/checkbox.io.j2
+    dest: /etc/nginx/sites-available/checkbox.io
+
+- name: Delete existing default sites-enabled file
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Enable the checkbox.io configuration
+  file:
+    src: /etc/nginx/sites-available/checkbox.io
+    dest: /etc/nginx/sites-enabled/checkbox.io
+    state: link
+
+- name: Restart nginx
+  systemd:
+    name: nginx
+    state: restarted

@@ -1,0 +1,13 @@
+---
+- hosts: checkbox.io
+  become: yes
+  gather_facts: no
+  
+  roles:
+    - ping
+    - env-vars
+    - nodejs-install
+    - mongodb-install
+    - mongodb-configure
+    - setup-checkbox
+    - setup-proxy

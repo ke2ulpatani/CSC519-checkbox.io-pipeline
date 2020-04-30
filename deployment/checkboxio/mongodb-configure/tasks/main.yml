@@ -1,0 +1,36 @@
+---
+# tasks file for pipeline/roles/mongodb-configure
+- name: Install pip
+  apt:
+    pkg: python-pip
+    state: present
+    
+- name: Install pymongo
+  command: pip install pymongo
+
+- name: Run the equivalent of "apt-get upgrade"
+  apt:
+    upgrade: dist
+
+- name: Run the equivalent of "apt-get update"
+  apt:
+    update_cache: yes
+
+- name: Start MongoDB
+  service:
+    name: mongod
+    state: started
+
+- name: Create MongoDB user
+  mongodb_user:
+    database: admin
+    name: "{{ mongodb_username }}"
+    password: "{{ mongodb_password }}"
+    roles: readWrite
+    state: present
+
+- name: Ensure MongoDB is running and and enabled to start automatically on reboots
+  systemd:
+    name: mongod
+    enabled: yes
+    state: started
