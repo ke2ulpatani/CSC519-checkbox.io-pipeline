@@ -15,3 +15,4 @@
 
 ## Deploy Milestone
 - [Checkpoint Report](Deploy/CHECKPOINT.md)
+- [Milestone Report](Deploy/README.md)
