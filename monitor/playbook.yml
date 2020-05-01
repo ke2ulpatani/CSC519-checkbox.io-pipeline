@@ -6,7 +6,7 @@
     - nodejs-install
     - forever-install
     - dashboard-setup
-- hosts: checkbox.io
+- hosts: checkbox
   become: yes
   gather_facts: no
   roles:
