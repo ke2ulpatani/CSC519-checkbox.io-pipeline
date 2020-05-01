@@ -2,11 +2,16 @@
 # tasks file for pipeline/roles/mongodb-configure
 - name: Install pip
   apt:
-    pkg: python-pip
+    pkg: python3-pip
     state: present
-    
-- name: Install pymongo
-  command: pip install pymongo
+
+- name: install pymongo
+  pip:
+    name: pymongo
+    state: present
+
+# - name: Install pymongo
+#   command: pip install pymongo
 
 - name: Run the equivalent of "apt-get upgrade"
   apt:
