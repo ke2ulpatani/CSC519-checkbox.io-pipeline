@@ -19,7 +19,7 @@ catch(e)
 let itrust = ''
 try
 {
-	checkbox = fs.readFileSync(path.join(__dirname,'itrust.txt')).toString();
+	itrust = fs.readFileSync(path.join(__dirname,'itrust.txt')).toString();
 }
 catch(e)
 {
@@ -31,7 +31,7 @@ catch(e)
 var servers =
 [
 	{name: "checkbox.io",url:`http://${checkbox}/`, status: "#cccccc",  scoreTrend : [0]},
-	{name: "iTrust-prod",url:`http://${itrust}/`, status: "#cccccc",  scoreTrend : [0]}
+	{name: "iTrust-prod",url:`http://${itrust}:8080/iTrust2/login`, status: "#cccccc",  scoreTrend : [0]}
 ];
 
 
