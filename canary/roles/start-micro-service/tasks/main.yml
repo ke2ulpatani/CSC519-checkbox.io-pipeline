@@ -1,0 +1,26 @@
+---
+# tasks to start micro-service
+- name: Create directory for checkbox.io-micro-preview
+  file:
+    path: /home/{{ ansible_user }}/checkbox.io-micro-preview
+    state: directory
+    mode: '0755'
+    
+- name: Clone checkbox.io-micro-preview repository
+  git:
+    repo: 'https://github.com/chrisparnin/checkbox.io-micro-preview'
+    dest: '/home/{{ ansible_user }}/checkbox.io-micro-preview'
+    version: "{{ lookup('env', 'SERVICE_BRANCH') }}"
+
+- name: Install node packages
+  npm:
+    path: "/home/{{ ansible_user }}/checkbox.io-micro-preview"
+
+- name: Stop all forever processes
+  shell:
+    cmd: forever stopall
+
+- name: Start checkbox.io micro-service using forever
+  shell: 
+    cmd: forever start index.js
+    chdir: '/home/{{ ansible_user }}/checkbox.io-micro-preview/'
