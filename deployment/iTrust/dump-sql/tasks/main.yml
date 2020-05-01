@@ -1,0 +1,4 @@
+---
+# tasks file for dump-sql
+- name: Dump iTrust Db
+  command: mysqldump --user=$MYSQL_USER --password=$MYSQL_PASSWORD --databases iTrust2 --result-file=/bakerx/deployment/iTrust/update-mysql/files/iTrust2.sql

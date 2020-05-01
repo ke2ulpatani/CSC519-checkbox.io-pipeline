@@ -1,0 +1,21 @@
+---
+# tasks file for java-install
+# Multiple wait: https://github.com/ansible/ansible/issues/51663
+- name: Wait for APT Lock
+  shell:  while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
+
+- name: Run the equivalent of "apt-get upgrade"
+  apt:
+    upgrade: dist
+    force_apt_get: yes
+
+- name: Wait for APT Lock
+  shell:  while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
+
+- name: Run the equivalent of "apt-get update"
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+
+- name: Wait for APT Lock
+  shell:  while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;

@@ -1,12 +1,22 @@
 ---
+- hosts: localhost
+  become: yes
+  gather_facts: no
+  
+  roles:
+    - env-vars
+    - dump-sql
+
 - hosts: iTrust
   become: yes
   gather_facts: no
   
   roles:
-    # - java-install
-    # - maven-install
+
+    - java-install
+    - env-vars
+    - maven-install
+    - update-system
     - mysql-install
-    # - tomcat-install
-    # - build-itrust
-    # - deploy-itrust
+    - update-mysql
+    - tomcat-install
