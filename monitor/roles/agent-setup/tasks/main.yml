@@ -11,5 +11,3 @@
   apt:
     name: redis-server
     state: present
-- name: Start Dashboard app
-  command: forever start /home/ubuntu/agent/index.js

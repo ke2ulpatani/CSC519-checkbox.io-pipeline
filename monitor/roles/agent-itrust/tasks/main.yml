@@ -1,0 +1,3 @@
+---
+- name: Start iTrust-prodagent
+  command: forever start /home/ubuntu/agent/index.js iTrust-prod
