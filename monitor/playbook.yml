@@ -14,7 +14,7 @@
     - forever-install
     - agent-setup
     - agent-checkbox
-- hosts: iTrust
+- hosts: itrust
   become: yes
   gather_facts: no
   roles:
