@@ -151,7 +151,7 @@ function checkReportFile() {
   
 async function run(blueBranch, greenBranch) {
     checkReportFile();
-    await startServers();
+    await startServers(); // create VMs
     await setupBlue(blueBranch);
     await setupGreen(greenBranch);
     await setupProxy();
