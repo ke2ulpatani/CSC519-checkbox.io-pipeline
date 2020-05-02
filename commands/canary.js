@@ -9,6 +9,10 @@ const sshSync = require('../lib/ssh');
 const PROXY_IP = "192.168.44.20";
 const BLUE_IP = "192.168.44.25";
 const GREEN_IP = "192.168.44.30";
+const PROXY_PORT = "3080";
+const SERVICE_PORT = "3000";
+const BLUE_NAME = "blue-srv-m3";
+const GREEN_NAME = "green-srv-m3";
 
 exports.command = 'canary <blueBranch> <greenBranch>';
 exports.desc = 'Canary analysis between two branches';
@@ -37,24 +41,24 @@ function startServers() {
         if( result.error ) { console.log(result.error); process.exit( result.status ); }
         
         console.log(chalk.blueBright('Provisioning blue server...'));
-        result = child.spawnSync(`bakerx`, `run blue-srv-m3 bionic --ip ${BLUE_IP} --sync --memory 2048`.split(' '), {shell:true, stdio: 'inherit'} );
+        result = child.spawnSync(`bakerx`, `run ${BLUE_NAME} bionic --ip ${BLUE_IP} --sync --memory 2048`.split(' '), {shell:true, stdio: 'inherit'} );
         if( result.error ) { console.log(result.error); process.exit( result.status ); }
         
         console.log(chalk.greenBright('Provisioning green server...'));
-        result = child.spawnSync(`bakerx`, `run green-srv-m3 bionic --ip ${GREEN_IP} --sync --memory 2048`.split(' '), {shell:true, stdio: 'inherit'} );
+        result = child.spawnSync(`bakerx`, `run ${GREEN_NAME} bionic --ip ${GREEN_IP} --sync --memory 2048`.split(' '), {shell:true, stdio: 'inherit'} );
         if( result.error ) { console.log(result.error); process.exit( result.status ); }
         
         resolve(42);
     });
 }
 
-function run_init_script(SERVER_IP, SERVER_NAME="NONAME", branch=null) {
+function run_init_script(SERVER_IP, service_branch=null, service_name=null) {
     /* installs ansible and sets key permission */
     return new Promise(async function(resolve, reject) {
-        console.log(chalk.whiteBright(`Running init script on ${SERVER_NAME}...`));
-        let init_script_cmd = '/bakerx/canary/server-init.sh';
-        if(branch)
-            init_script_cmd = `/bakerx/canary/server-init.sh ${branch}`;
+        console.log(chalk.whiteBright(`Running init script on ${service_name}...`));
+        let init_script_cmd = `/bakerx/canary/server-init.sh ${PROXY_IP} ${PROXY_PORT} ${BLUE_IP} ${GREEN_IP} ${BLUE_NAME} ${GREEN_NAME} ${SERVICE_PORT}`;
+        if(service_branch && service_name)
+            init_script_cmd = `/bakerx/canary/server-init.sh ${PROXY_IP} ${PROXY_PORT} ${BLUE_IP} ${GREEN_IP} ${BLUE_NAME} ${GREEN_NAME} ${SERVICE_PORT} ${service_branch} ${service_name}`;
 
         console.log(chalk.whiteBright('Installing privateKey on the server'));
         let identifyFile = path.join(os.homedir(), '.bakerx', 'insecure_private_key');
@@ -71,7 +75,7 @@ function run_init_script(SERVER_IP, SERVER_NAME="NONAME", branch=null) {
 
 function setupBlue(blueBranch) {
     return new Promise(async function(resolve, reject) {
-        await run_init_script(BLUE_IP, "BLUE", blueBranch);
+        await run_init_script(BLUE_IP, blueBranch, BLUE_NAME);
         let filePath = '/bakerx/canary/playbook-blue.yml';
         let inventoryPath = '/bakerx/canary/inventory.ini';
 
@@ -85,7 +89,7 @@ function setupBlue(blueBranch) {
 
 function setupGreen(greenBranch) { 
     return new Promise(async function(resolve, reject) {
-        await run_init_script(GREEN_IP, "GREEN", greenBranch);
+        await run_init_script(GREEN_IP, greenBranch, GREEN_NAME);
         let filePath = '/bakerx/canary/playbook-green.yml';
         let inventoryPath = '/bakerx/canary/inventory.ini';
 
@@ -99,7 +103,7 @@ function setupGreen(greenBranch) {
 
 function setupProxy() {
     return new Promise(async function(resolve, reject) {
-        await run_init_script(PROXY_IP, "PROXY");
+        await run_init_script(PROXY_IP, null, "proxy-srv-m3");
         let filePath = '/bakerx/canary/playbook-proxy.yml';
         let inventoryPath = '/bakerx/canary/inventory.ini';
 
@@ -113,7 +117,7 @@ function setupProxy() {
   
 async function run(blueBranch, greenBranch) {
     await startServers();
+    await setupProxy();
     await setupBlue(blueBranch);
     await setupGreen(greenBranch);
-    await setupProxy();
 }

@@ -3,5 +3,6 @@
   become: yes
   gather_facts: no
   roles:
+    - forever-install
     - start-proxy
     

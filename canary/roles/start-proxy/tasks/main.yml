@@ -1,2 +1,38 @@
 ---
 # tasks to start proxy server
+- name: Create directory for proxy
+  file:
+    path: /home/{{ ansible_user }}/proxy
+    state: directory
+    mode: '0755'
+    
+- name: Copying proxy server js
+  template:
+    force: yes
+    src: ../templates/index.js.j2
+    dest: /home/{{ ansible_user }}/proxy/proxy.js
+
+- name: Copying proxy server package.json
+  template:
+    force: yes
+    src: ../templates/package.json
+    dest: /home/{{ ansible_user }}/proxy/package.json
+
+- name: Install node packages
+  npm:
+    path: "/home/{{ ansible_user }}/proxy"
+
+- name: Restart service redis, in all cases
+  service:
+    name: redis
+    state: restarted
+
+- name: Stop proxy server forever processes
+  shell:
+    cmd: forever stop proxy
+  ignore_errors: yes
+
+- name: Start proxy server using forever
+  shell: 
+    cmd: forever start --id "proxy" proxy.js
+    chdir: '/home/{{ ansible_user }}/proxy/'

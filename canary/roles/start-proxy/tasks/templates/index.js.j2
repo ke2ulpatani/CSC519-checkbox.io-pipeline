@@ -1,0 +1,161 @@
+const chalk = require('chalk');
+const path = require('path');
+const os = require('os');
+
+const redis = require('redis');
+const got = require('got');
+const http = require('http');
+const httpProxy = require('http-proxy');
+
+const PROXY_IP = '{{ lookup("env", "PROXY_IP") }}';
+const BLUE_IP = '{{ lookup("env", "BLUE_IP") }}';
+const GREEN_IP = '{{ lookup("env", "GREEN_IP") }}';
+const PROXY_PORT = '{{ lookup("env", "PROXY_PORT") }}';
+const SERVICE_PORT = '{{ lookup("env", "SERVICE_PORT") }}';
+const BLUE  = `http://${BLUE_IP}:${SERVICE_PORT}/preview`;
+const GREEN = `http://${GREEN_IP}:${SERVICE_PORT}/preview`;
+/// Servers data being monitored.
+var servers = 
+[
+    {name: '{{ lookup("env", "BLUE_NAME") }}',url:`${BLUE}`},
+    {name: '{{ lookup("env", "GREEN_NAME") }}',url:`${GREEN}`},
+];
+
+
+class Production
+{
+    constructor()
+    {
+        this.TARGET = BLUE;
+        this.curr_server_idx = 0;
+
+        this.intervalId = setInterval( this.saveHealthData.bind(this), 5000 );
+        
+        let tmins = 1; // change back to 5
+        
+        // change to green test server after t minutes
+        setTimeout(() => {
+            clearInterval(this.intervalId);
+            // to do save data till now
+            this.TARGET = GREEN;
+            this.curr_server_idx = 1;
+            this.intervalId = setInterval( this.saveHealthData.bind(this), 5000 );
+        }, tmins*60*1000);
+        
+        // change back to blue stable server after 2t minutes
+        setTimeout(() => {
+            clearInterval(this.intervalId);
+            console.log('Canary Analysis Complete');
+            this.TARGET = BLUE;
+            this.curr_server_idx = 0;
+        }, 2*tmins*60*1000);
+        
+    }
+
+    // TASK 1: 
+    proxy()
+    {
+        let options = {};
+        let proxy   = httpProxy.createProxyServer(options);
+        let self = this;
+        // Redirect requests to the active TARGET (BLUE or GREEN)
+        let server  = http.createServer(function(req, res)
+        {
+            // callback for redirecting requests.
+            proxy.web( req, res, {target: self.TARGET } );
+        });
+        server.listen(PROXY_PORT);
+   }
+
+   failover()
+   {
+      this.TARGET = BLUE;
+   }
+
+   async saveHealthData()
+   {
+      try 
+      {
+        let server = servers[this.curr_server_idx];
+        console.log(`Saving data for ${server.name}. Last status code ${server.statusCode}`);
+        // const response = await got(this.TARGET, {throwHttpErrors: false});
+        // let status = response.statusCode == 200 ? chalk.green(response.statusCode) : chalk.red(response.statusCode);
+        // console.log( chalk`{grey Health check on ${this.TARGET}}: ${status}`);
+      }
+      catch (error) {
+        console.log(error);
+        // console.log(`switching to ${self.TARGET==BLUE?'GREEN':'BLUE'} server`);
+        // console.log(`switching to BLUE server`);
+        // this.TARGET = BLUE;
+      }
+   }
+   
+}
+
+async function run() {
+    console.log("Starting redis server");
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // REDIS SUBSCRIPTION
+    /////////////////////////////////////////////////////////////////////////////////////////
+    let client = redis.createClient(6379, 'localhost', {});
+    // We subscribe to all the data being published by the server's metric agent.
+    for( var server of servers )
+    {
+        // The name of the server is the name of the channel to recent published events on redis.
+        client.subscribe(server.name);
+    }
+    
+    // When an agent has published information to a channel, we will receive notification here.
+    client.on("message", function (channel, message) 
+    {
+        let server = servers[prod.curr_server_idx];
+        
+        console.log(`Received message from agent: ${channel} Current Server: ${server.name}`)
+        // Update our current snapshot for a server's metrics.
+        
+        if( server.name == channel)
+        {
+            let payload = JSON.parse(message);
+            server.memoryLoad = payload.memoryLoad;
+            server.cpu = payload.cpu;
+            server.avgload = payload.avgload;
+            // updateHealth(server);
+        }
+    });
+    //wait for blue server to start up
+    console.log('Waiting for blue server to start up');
+    let test_data={"markdown":"\n{NumberQuestions:true}\n-----------\nStart with header for global options:\n\n    {NumberQuestions:true}\n"};
+    await got.post(servers[0].url, {json: test_data, timeout: 5000, throwHttpErrors: false});
+    
+    console.log(chalk.keyword('pink')(`Starting proxy on ${PROXY_IP}:${PROXY_PORT}`));
+
+    let prod = new Production();
+    prod.proxy();
+    
+    // LATENCY CHECK
+    var latency = setInterval( function () 
+    {
+        let server = servers[prod.curr_server_idx];
+        let now = Date.now();
+
+        // Bind a new variable in order to for it to be properly captured inside closure.
+        let captureServer = server;
+        
+        // Make request to server we are monitoring.
+        let test_data={"markdown":"\n{NumberQuestions:true}\n-----------\nStart with header for global options:\n\n    {NumberQuestions:true}\n"};
+        got.post(server.url, {json: test_data, timeout: 5000, throwHttpErrors: false}).then(function(res)
+        {
+            // TASK 2
+            // console.log(res.statusCode, res.timings.phases.firstByte, res.body);
+            captureServer.statusCode = res.statusCode;
+            captureServer.latency = res.timings.phases.firstByte;
+        }).catch( e => 
+        {
+            // console.log(e);
+            captureServer.statusCode = e.code;
+            captureServer.latency = 5000;
+        });
+    }, 10000);
+    
+}
+run();

@@ -5,4 +5,5 @@
   roles:
     - forever-install
     - start-micro-service
+    - start-health-service
     

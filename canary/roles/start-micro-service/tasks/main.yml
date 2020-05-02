@@ -16,11 +16,12 @@
   npm:
     path: "/home/{{ ansible_user }}/checkbox.io-micro-preview"
 
-- name: Stop all forever processes
+- name: Stop micro-service forever process
   shell:
-    cmd: forever stopall
+    cmd: forever stop index
+  ignore_errors: yes
 
 - name: Start checkbox.io micro-service using forever
   shell: 
-    cmd: forever start index.js
+    cmd: forever start --id "index" index.js
     chdir: '/home/{{ ansible_user }}/checkbox.io-micro-preview/'
