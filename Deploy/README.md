@@ -52,3 +52,6 @@ In order to protect credentials, they're are managed using :
 
 ## Screencast
 [Screencast Video](https://drive.google.com/open?id=1fCF1fJTuE-TnvXc0Pq80S0OMo9cfMXGD)
+
+### Screencast Canary Analysis
+[Screencast Canary Analysis](https://drive.google.com/file/d/1U8U6CY2q7i0SuAvkcd2FUDmq2jgQMvxL/view?usp=sharing)
