@@ -7,13 +7,13 @@ In this milestone, we sat & discussed all the ways we could achieve the goal and
 1. `pipeline prod up`  
 This command helps to create production servers on AWS named (monitor, iTrust and checkbox.io) and deploy monitoring service.
 
-2. `pipeline deploy checkbox.io -i inventory.i`  
+2. `pipeline deploy checkbox.io -i inventory.ini`  
 This commands helps us to deploy checkbox.io on AWS EC2 instance
 
-3. `pipeline deploy iTrust -i inventory.ini`
+3. `pipeline deploy iTrust -i inventory.ini`  
 This commands helps us to deploy iTrust on AWS EC2 instance
 
-4. `pipeline canary master broken`
+4. `pipeline canary master broken`  
 This commands helps us to construct canary infrastructure, collect data, and perform analysis on the given branches.
 
 ### Dependencies:
@@ -46,7 +46,8 @@ In order to protect credentials, they're are managed using :
 | canary test generate health metrics | [Issue #49](https://github.ncsu.edu/cscdevops-spring2020/DEVOPS-10/issues/49) |
 | itrust deployment ansible changes | [Issue #48](https://github.ncsu.edu/cscdevops-spring2020/DEVOPS-10/issues/48) |
 | Monitor VM JS changes for metric collection | [Issue #46](https://github.ncsu.edu/cscdevops-spring2020/DEVOPS-10/issues/46) |
-## Current Snapshot of the Project Board:
+
+## Current Snapshot of the Project Board (Remaining):
 ![img](../imgs/build_milestone_project_board.png)
 
 ## Screencast
