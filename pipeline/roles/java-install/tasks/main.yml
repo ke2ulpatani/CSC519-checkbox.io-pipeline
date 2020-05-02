@@ -1,12 +1,31 @@
 ---
 # tasks file for java-install
+# Multiple wait: https://github.com/ansible/ansible/issues/51663
+
+- name: Add jenkins key
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 9B7D32F2D50582E6
+
+- name: Wait for APT Lock
+  shell:  while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
+
+
 - name: Run the equivalent of "apt-get upgrade"
   apt:
     upgrade: dist
+    force_apt_get: yes
+
+- name: Wait for APT Lock
+  shell:  while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
 
 - name: Run the equivalent of "apt-get update"
   apt:
     update_cache: yes
+    force_apt_get: yes
+
+- name: Wait for APT Lock
+  shell:  while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
 
 - name: Install Oracle Java 11
   apt:
@@ -14,3 +33,7 @@
     - default-jdk
     - ca-certificates
     state: latest
+    force_apt_get: yes
+
+- name: Wait for APT Lock
+  shell:  while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;

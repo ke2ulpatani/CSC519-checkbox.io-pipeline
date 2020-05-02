@@ -76,8 +76,9 @@ function getFuncName( node )
 function FunctionBuilder()
 {
 	this.FunctionName = "";
-	this.messageChainsCount = 0;
+	this.messageChainsCount = [];
     this.ifCounts = 0;
+    this.longMethods = [];
 };
 
 async function analyzeFile(filePath,callback)
@@ -98,10 +99,10 @@ async function analyzeFile(filePath,callback)
                 
                 if (child.type === 'IfStatement') {
                     builder.ifCounts++;
-                    if(builder.ifCounts >5) {
-                        console.log("if count exceeded 5 : "+builder.FunctionName+" file: "+filePath);
-                        process.exit(1);
-                    }
+                    // if(builder.ifCounts >5) {
+                    //     console.log("if count exceeded 5 : "+builder.FunctionName+" file: "+filePath);
+                    //     process.exit(1);
+                    // }
                 }
                 
                 if (child.type === 'MemberExpression') {
@@ -119,16 +120,23 @@ async function analyzeFile(filePath,callback)
             });
 
             if ((node.loc.end.line - node.loc.start.line)+1 > 100) {
-                console.log("long method detected : "+builder.FunctionName+" file: "+filePath);
-                process.exit(1);
+                builder.longMethods.push(builder.FunctionName+" file: "+filePath);
             }
 
             if(builder.messageChainsCount > 10) {
-                console.log("max chain exceeded 10: "+builder.FunctionName+" file: "+filePath)
+                builder.messageChainsCount.push(builder.FunctionName+" file: "+filePath);
+            }
+            console.log("If counts: "+ builder.ifCounts);
+            console.log("Max chain: "+ builder.messageChainsCount);
+            console.log("Long method detected: "+ builder.longMethods);
+            builders[builder.FunctionName] = builder;
+            if(builder.ifCounts > 5 || builder.messageChainsCount.length > 0 || builder.longMethods > 0) {
                 process.exit(1);
             }
-            builders[builder.FunctionName] = builder;
+            
         }
+
+        
         
     });
     callback(null);

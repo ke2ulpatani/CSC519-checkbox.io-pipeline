@@ -1,0 +1,90 @@
+const redis = require('redis');
+const util  = require('util');
+const os = require('os');
+const si = require('systeminformation');
+
+// Calculate metrics.
+// TASK 1:
+class Agent
+{
+    memoryLoad()
+    {
+        // console.log( os.totalmem(), os.freemem() );
+        return ((os.totalmem()-os.freemem())/os.totalmem()*100).toFixed(2);
+    }
+    async cpu()
+    {
+        
+        let load = await si.currentLoad();
+        // console.log( load );
+        // console.log( load.currentload );
+        
+        return load.currentload.toFixed(2);
+    }
+    async avgload()
+    {
+        
+        let load = await si.currentLoad();
+        // console.log( load );
+        // console.log( load.currentload );
+        
+        return (load.avgload*100).toFixed(2);
+    }
+}
+
+(async () => 
+{
+    // Get agent name from command line.
+    let args = process.argv.slice(2);
+    main(args[0]);
+
+})();
+
+
+async function main(name)
+{
+    let agent = new Agent();
+
+    let connection = redis.createClient(6379, '{{ lookup("env", "PROXY_IP") }}', {
+        retry_strategy: function(options) {
+        //   if (options.error && options.error.code === "ECONNREFUSED") {
+        //     // End reconnecting on a specific error and flush all commands with
+        //     // a individual error
+        //     return new Error("The server refused the connection");
+        //   }
+          if (options.total_retry_time > 1000 * 60 * 60) {
+            // End reconnecting after a specific timeout and flush all commands
+            // with a individual error
+            return new Error("Retry time exhausted");
+          }
+          if (options.attempt > 10) {
+            // End reconnecting with built in error
+            return undefined;
+          }
+          // reconnect after
+          return Math.min(options.attempt * 100, 3000);
+        },
+      });
+      
+    connection.on('error', function(e)
+    {
+        console.log(e);
+        process.exit(1);
+    });
+    let client = {};
+    client.publish = util.promisify(connection.publish).bind(connection);
+
+    // Push update ever 1 second
+    setInterval(async function()
+    {
+        let payload = {
+            memoryLoad: agent.memoryLoad(),
+            cpu: await agent.cpu(),
+            avgload: await agent.avgload()
+        };
+        let msg = JSON.stringify(payload);
+        await client.publish(name, msg);
+        console.log(`${name} ${msg}`);
+    }, 1000);
+
+}

@@ -7,6 +7,7 @@
     image: ami-0fc20dd1da406780b
     region: us-east-2
     key_name: prod_key
+    group_id: sg-0bfd003365883a796
     count: 1
     wait: true
     instance_tags:
@@ -21,6 +22,7 @@
     image: ami-0fc20dd1da406780b
     region: us-east-2
     key_name: prod_key
+    group_id: sg-0bfd003365883a796
     count: 1
     wait: true
     instance_tags:
@@ -35,6 +37,7 @@
     image: ami-0fc20dd1da406780b
     region: us-east-2
     key_name: prod_key
+    group_id: sg-0bfd003365883a796
     count: 1
     wait: true
     instance_tags:
@@ -45,3 +48,48 @@
   template:
     src: /bakerx/production/roles/ec2-instance/templates/inventory.ini.j2
     dest: /bakerx/inventory.ini
+
+- name: Delete file Checkbox
+  file:
+    path: /bakerx/monitor/dashboard/metrics/checkbox.txt
+    state: absent
+
+- name: Create file Checkbox
+  file:
+    path: /bakerx/monitor/dashboard/metrics/checkbox.txt
+    state: touch
+
+- name: Delete file iTrust
+  file:
+    path: /bakerx/monitor/dashboard/metrics/itrust.txt
+    state: absent
+
+- name: Create file iTrust
+  file:
+    path: /bakerx/monitor/dashboard/metrics/itrust.txt
+    state: touch
+
+- name: Delete file monitor
+  file:
+    path: /bakerx/monitor/agent/monitor.txt
+    state: absent
+
+- name: Create file monitor
+  file:
+    path: /bakerx/monitor/agent/monitor.txt
+    state: touch
+
+- name: Copy checkbox.io ip address
+  lineinfile:
+    path: /bakerx/monitor/dashboard/metrics/checkbox.txt
+    line: "{{ ec2_checkbox['instances'][0]['public_ip'] }}"
+
+- name: Copy iTrust ip address
+  lineinfile:
+    path: /bakerx/monitor/dashboard/metrics/itrust.txt
+    line: "{{ ec2_iTrust['instances'][0]['public_ip'] }}"
+
+- name: Copy monitor ip address
+  lineinfile:
+    path: /bakerx/monitor/agent/monitor.txt
+    line: "{{ ec2_monitor['instances'][0]['public_ip'] }}"

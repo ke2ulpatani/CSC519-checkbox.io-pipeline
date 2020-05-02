@@ -1,0 +1,88 @@
+---
+#tasks file for mysql-server-install
+- name: Install the MySQL packages
+  apt:
+    pkg:
+      - mysql-server
+      - python-mysqldb
+      - libmysqlclient-dev
+      - mysql-client
+      - mysql-common
+      - python-pymysql
+      - python-pip
+    state: latest
+    update_cache: yes
+
+- name: Install pip
+  apt:
+    pkg: python3-pip
+    state: present
+
+- name: Install pymysql
+  pip:
+    name: pymysql
+    state: present
+
+# - name: Install pymongo
+#   pip:
+#     name: pymysql
+#     state: present
+
+# - name: Install pymysql
+#   pip:
+#     name: mysql-python
+#     state: present
+  
+# - name: Install pymongo
+#   command: pip install MySQL-python
+
+# - name:
+#   debug:
+#     msg: "{{ mysql_root_pass }}"
+
+- name: Sets the root password (good)
+  mysql_user:
+    login_user: root
+    login_password: ''
+    name: root
+    password: "{{ mysql_root_pass }}"
+    # host: localhost
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+
+- name: Copy the root credentials as .my.cnf file
+  template:
+    src: ../templates/root.cnf.j2
+    dest: "/home/{{ ansible_user }}/.my.cnf"
+    mode: 0600
+
+- name: Copy the root credentials as .my.cnf file
+  template:
+    src: ../templates/root.cnf.j2
+    dest: "/root/.my.cnf"
+    mode: 0600
+
+- name: Copy the root credentials as my.cnf file
+  template:
+    src: ../templates/root.cnf.j2
+    dest: "/etc/mysql/my.cnf"
+    mode: 0600
+
+- name: MySQL | restart mysql
+  service: 
+    name: mysql
+    state: restarted
+  become: true
+
+- name: Ensure Anonymous user(s) are not in the database
+  mysql_user:
+    name: ''
+    host: "{{ item }}"
+    state: absent
+  with_items:
+    - 'localhost'
+
+- name: Remove the test database
+  mysql_db:
+    name: test
+    state: absent

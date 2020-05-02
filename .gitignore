@@ -1,3 +1,5 @@
 .DS_Store
 node_modules/
 *.retry
+*.sql
+canary_report.txt

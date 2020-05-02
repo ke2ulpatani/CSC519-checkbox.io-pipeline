@@ -1,0 +1,13 @@
+---
+# tasks file for nodejs-install
+- name: Copy Agent Folder
+  synchronize:
+    src: /bakerx/monitor/agent
+    dest: /home/ubuntu
+- name: Install packages based on package.json.
+  npm:
+    path: /home/ubuntu/agent
+- name: Install redis-server
+  apt:
+    name: redis-server
+    state: present

@@ -1,0 +1,4 @@
+---
+# vars file for build-itrust
+gh_user: "{{ lookup('env', 'gh_user') }}"
+gh_password: "{{ lookup('env', 'gh_password') }}"

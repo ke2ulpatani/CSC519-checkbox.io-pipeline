@@ -1,0 +1,3 @@
+---
+- name: Start checkbox.io agent
+  command: forever start /home/ubuntu/agent/index.js checkbox.io

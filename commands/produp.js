@@ -31,8 +31,14 @@ async function run() {
     let filePath = '/bakerx/production/playbook.yml';
     let inventoryPath = '/bakerx/pipeline/inventory.ini';
 
-    console.log(chalk.blueBright('Running ansible script...'));
+    console.log(chalk.blueBright('Running ansible script for Production...'));
     result = sshSync(`/bakerx/pipeline/run-ansible.sh ${filePath} ${inventoryPath}`, `vagrant@${JENKINS_IP}`);
     if( result.error ) { process.exit( result.status ); }
+
+    setTimeout(function(){
+      console.log(chalk.blueBright('Running ansible script for Monitoring...'));
+      result = sshSync(`sudo /bakerx/pipeline/run-ansible.sh /bakerx/monitor/playbook.yml /bakerx/inventory.ini`, `vagrant@${JENKINS_IP}`);
+      if( result.error ) { process.exit( result.status ); }
+    }, 60000);
 
 }

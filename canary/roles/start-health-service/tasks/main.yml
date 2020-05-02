@@ -1,0 +1,33 @@
+---
+# tasks to start micro-service
+- name: Create directory for health service
+  file:
+    path: /home/{{ ansible_user }}/agent
+    state: directory
+    mode: '0755'
+    
+- name: Copying health service js
+  template:
+    force: yes
+    src: ../templates/index.js.j2
+    dest: /home/{{ ansible_user }}/agent/agent.js
+
+- name: Copying health service package.json
+  template:
+    force: yes
+    src: ../templates/package.json
+    dest: /home/{{ ansible_user }}/agent/package.json
+
+- name: Install node packages
+  npm:
+    path: "/home/{{ ansible_user }}/agent"
+    
+- name: Stop health service forever process
+  shell:
+    cmd: forever stop agent
+  ignore_errors: yes
+
+- name: Start health service using forever
+  shell: 
+    cmd: forever start --id "agent" agent.js "{{ lookup('env', 'SERVICE_NAME') }}"
+    chdir: '/home/{{ ansible_user }}/agent/'

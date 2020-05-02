@@ -1,0 +1,22 @@
+---
+# tasks file for nodejs-install
+- name: Copy Dashboard Folder
+  synchronize:
+    src: /bakerx/monitor/dashboard
+    dest: /home/ubuntu
+- name: Install packages based on package.json.
+  npm:
+    path: /home/ubuntu/dashboard
+- name: Install redis-server
+  apt:
+    name: redis-server
+    state: present
+- name: Replace a localhost entry with our own
+  lineinfile:
+    path: /etc/redis/redis.conf
+    regexp: '^bind 127\.0\.0\.1 ::1'
+    line: bind 0.0.0.0 ::1
+- name: Restart service redis
+  command: systemctl restart redis
+- name: Start Dashboard app
+  command: forever start /home/ubuntu/dashboard/bin/www

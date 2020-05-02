@@ -1,0 +1,12 @@
+---
+# tasks file for update-mysql
+- name: upload mysql dump to prod
+  copy:
+    src: ../files/iTrust2.sql
+    dest: /home/{{ ansible_user }}/iTrust2.sql
+
+- name: Import in Mysql
+  mysql_db:
+    name: iTrust2
+    state: import
+    target: /home/{{ ansible_user }}/iTrust2.sql

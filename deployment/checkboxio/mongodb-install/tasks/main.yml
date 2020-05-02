@@ -1,0 +1,17 @@
+---
+# tasks file for mongodb-install
+- name: Import MongoDB public GPG Key
+  apt_key:
+    keyserver: hkp://keyserver.ubuntu.com:80
+    id: 4B7C549A058F8B6B
+
+- name: Add MongoDB repository into sources list
+  apt_repository:
+    repo: deb http://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse
+    state: present
+
+- name: Install MongoDB
+  apt:
+    name: mongodb-org
+    state: latest
+    update_cache: yes

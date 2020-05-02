@@ -1,0 +1,9 @@
+---
+- hosts: green
+  become: yes
+  gather_facts: no
+  roles:
+    - forever-install
+    - start-micro-service
+    - start-health-service
+    

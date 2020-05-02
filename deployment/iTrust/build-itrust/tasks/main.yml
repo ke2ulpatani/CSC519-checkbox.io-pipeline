@@ -1,0 +1,24 @@
+---
+# tasks file for build-itrust
+- name: Cloning iTrust repo
+  git:
+        git: repo=https://{{ gh_user }}:{{ gh_password }}@github.ncsu.edu/engr-csc326-staff/iTrust2-v6.git
+    dest: "/home/{{ ansible_user }}/iTrust2-v6"
+
+- name: Copying db.properties for iTrust build job
+  template:
+    force: yes
+    src: ../templates/db.properties.j2
+    dest: /home/{{ ansible_user }}/iTrust2-v6/iTrust2/src/main/java/db.properties
+
+- name: Copying email.properties for iTrust build job
+  template:
+    force: yes
+    src: ../templates/email.properties.j2
+    dest: /home/{{ ansible_user }}/iTrust2-v6/iTrust2/src/main/java/email.properties
+
+- name: Build iTrust
+  command: mvn -f /home/{{ ansible_user }}/iTrust2-v6/iTrust2/pom-data.xml process-test-classes
+
+- name: Deploy war file
+  command: mvn jetty:run

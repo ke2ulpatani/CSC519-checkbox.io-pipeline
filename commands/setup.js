@@ -53,7 +53,7 @@ async function run(privateKey, ghUser, ghPass) {
 
     console.log(chalk.blueBright('Running init script...'));
     let init_script_cmd = '/bakerx/pipeline/server-init.sh';
-    if(ghUser || ghUser) {
+    if(ghUser || ghPass) {
         if(ghUser && ghPass) {
             init_script_cmd = `/bakerx/pipeline/server-init.sh ${ghUser} ${ghPass}`;
         }
