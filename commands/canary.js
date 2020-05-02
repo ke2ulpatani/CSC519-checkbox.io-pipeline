@@ -125,16 +125,16 @@ function checkReportFile() {
         //     console.log('file was deleted');
     });
     
-    var maxTries = 20; 
+    var maxTries = 100; 
     var tmins = 5; // change to 5 mins
-    setTimeout(() => {    // wait for 2t mins
+    setTimeout(() => {    // wait for 3t mins
         // check for report file generation on every 10 second
         const checkReport = setInterval(function() {
             const file = reportFile;
             const fileExists = fs.existsSync(file);
             maxTries--;
             // console.log('Report Generated?: ', fileExists, maxTries);
-            process.stdout.write(".");
+            // process.stdout.write(".");
             if (fileExists) {
                 console.log('\nReport Generated!');
                 console.log(fs.readFileSync(reportFile).toString());
@@ -155,5 +155,5 @@ async function run(blueBranch, greenBranch) {
     await setupBlue(blueBranch);
     await setupGreen(greenBranch);
     await setupProxy();
-    process.stdout.write("Waiting for report");
+    console.log("Waiting for report...");
 }
