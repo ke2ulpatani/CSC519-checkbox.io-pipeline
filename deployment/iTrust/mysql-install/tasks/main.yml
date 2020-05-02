@@ -36,9 +36,9 @@
 # - name: Install pymongo
 #   command: pip install MySQL-python
 
-- name:
-  debug:
-    msg: "{{ mysql_root_pass }}"
+# - name:
+#   debug:
+#     msg: "{{ mysql_root_pass }}"
 
 - name: Sets the root password (good)
   mysql_user:

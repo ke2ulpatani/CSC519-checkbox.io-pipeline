@@ -47,7 +47,7 @@ In order to protect credentials, they're are managed using :
 | itrust deployment ansible changes | [Issue #48](https://github.ncsu.edu/cscdevops-spring2020/DEVOPS-10/issues/48) |
 | Monitor VM JS changes for metric collection | [Issue #46](https://github.ncsu.edu/cscdevops-spring2020/DEVOPS-10/issues/46) |
 
-## Current Snapshot of the Project Board (Remaining):
+## Current Snapshot of the Project Board:
 ![img](../imgs/deploy_milestone_project_board.png)
 
 ## Screencast
