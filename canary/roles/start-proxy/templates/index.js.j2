@@ -33,7 +33,7 @@ class Production
 
         this.intervalId = setInterval( this.saveHealthData.bind(this), 5000 );
         
-        let tmins = 1; // change back to 5
+        let tmins = 5; // change to 5 mins
         
         // change to green test server after t minutes
         setTimeout(() => {

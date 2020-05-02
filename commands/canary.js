@@ -126,7 +126,7 @@ function checkReportFile() {
     });
     
     var maxTries = 20; 
-    var tmins = 1; // change to 5
+    var tmins = 5; // change to 5 mins
     setTimeout(() => {    // wait for 2t mins
         // check for report file generation on every 10 second
         const checkReport = setInterval(function() {
