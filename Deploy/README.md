@@ -48,7 +48,7 @@ In order to protect credentials, they're are managed using :
 | Monitor VM JS changes for metric collection | [Issue #46](https://github.ncsu.edu/cscdevops-spring2020/DEVOPS-10/issues/46) |
 
 ## Current Snapshot of the Project Board (Remaining):
-![img](../imgs/build_milestone_project_board.png)
+![img](../imgs/deploy_milestone_project_board.png)
 
 ## Screencast
 [Screencast Video](https://drive.google.com/open?id=1fCF1fJTuE-TnvXc0Pq80S0OMo9cfMXGD)
