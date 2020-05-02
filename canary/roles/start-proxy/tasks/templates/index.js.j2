@@ -1,7 +1,9 @@
 const chalk = require('chalk');
 const path = require('path');
 const os = require('os');
+const fs = require('fs');
 
+const mwu = require('mann-whitney-utest');
 const redis = require('redis');
 const got = require('got');
 const http = require('http');
@@ -17,8 +19,8 @@ const GREEN = `http://${GREEN_IP}:${SERVICE_PORT}/preview`;
 /// Servers data being monitored.
 var servers = 
 [
-    {name: '{{ lookup("env", "BLUE_NAME") }}',url:`${BLUE}`},
-    {name: '{{ lookup("env", "GREEN_NAME") }}',url:`${GREEN}`},
+    {name: '{{ lookup("env", "BLUE_NAME") }}',url:`${BLUE}`, canaryScoreList: []},
+    {name: '{{ lookup("env", "GREEN_NAME") }}',url:`${GREEN}`, canaryScoreList: []},
 ];
 
 
@@ -36,7 +38,6 @@ class Production
         // change to green test server after t minutes
         setTimeout(() => {
             clearInterval(this.intervalId);
-            // to do save data till now
             this.TARGET = GREEN;
             this.curr_server_idx = 1;
             this.intervalId = setInterval( this.saveHealthData.bind(this), 5000 );
@@ -45,11 +46,105 @@ class Production
         // change back to blue stable server after 2t minutes
         setTimeout(() => {
             clearInterval(this.intervalId);
-            console.log('Canary Analysis Complete');
             this.TARGET = BLUE;
             this.curr_server_idx = 0;
+            const canary_analysis = this.canary_analysis.bind(this);
+            canary_analysis();
+            console.log('Canary Analysis Complete');
         }, 2*tmins*60*1000);
         
+    }
+    
+    canary_analysis()
+    {
+        // latency, statusCode, memoryLoad, cpu, avgLoad
+        let samples, u;
+        samples=[servers[0].latencyList, servers[1].latencyList]
+        u=mwu.test(samples);
+        let finalScore=0;
+        let REPORT_TEXT="Canary Analysis:\n";
+        if(mwu.significant(u, samples)) {
+            console.log("latency: FAIL");
+            REPORT_TEXT+="latency: FAIL\n";
+        }
+        else {
+            console.log("latency: PASS");
+            REPORT_TEXT+="latency: PASS\n";
+            finalScore++;
+        }
+        
+        samples=[servers[0].statusCodeList, servers[1].statusCodeList]
+        u=mwu.test(samples);
+        if(mwu.significant(u, samples)) {
+            console.log("statusCode: FAIL");
+            REPORT_TEXT+="statusCode: FAIL\n";
+        }
+        else {
+            console.log("statusCode: PASS");
+            REPORT_TEXT+="statusCode: PASS\n";
+            finalScore++;
+        }
+        
+        samples=[servers[0].memoryLoadList, servers[1].memoryLoadList]
+        u=mwu.test(samples);
+        if(mwu.significant(u, samples)) {
+            console.log("memoryLoad: FAIL");
+            REPORT_TEXT+="memoryLoad: FAIL\n";
+        }
+        else {
+            console.log("memoryLoad: PASS");
+            REPORT_TEXT+="memoryLoad: PASS\n";
+            finalScore++;
+        }
+        
+        samples=[servers[0].cpuList, servers[1].cpuList]
+        u=mwu.test(samples);
+        if(mwu.significant(u, samples)) {
+            console.log("CPU utilization: FAIL");
+            REPORT_TEXT+="CPU utilization: FAIL\n";
+        }
+        else {
+            console.log("CPU utilization: PASS");
+            REPORT_TEXT+="CPU utilization: PASS\n";
+            finalScore++;
+        }
+        
+        samples=[servers[0].avgLoadList, servers[1].avgLoadList]
+        u=mwu.test(samples);
+        if(mwu.significant(u, samples)) {
+            console.log("avgLoad: FAIL");
+            REPORT_TEXT+="avgLoad: FAIL\n";
+        }
+        else {
+            console.log("avgLoad: PASS");
+            REPORT_TEXT+="avgLoad: PASS\n";
+            finalScore++;
+        }
+        
+        // samples=[servers[0].canaryScoreList, servers[1].canaryScoreList]
+        // u=mwu.test(samples);
+        // if(mwu.significant(u, samples)) {
+        //     console.log("canaryScoreList : FAIL");
+        // }
+        // else {
+        //     console.log("canaryScoreList : PASS");
+        // }
+        
+        finalScore=(finalScore/5*100).toFixed(2);
+        console.log(`CANARY SCORE: ${finalScore}`);
+        REPORT_TEXT+=`CANARY SCORE: ${finalScore}\n`;
+        
+        let result="FAIL";
+        if(finalScore>80)
+            result="PASS";
+        
+        console.log(`RESULT: ${result}`);
+        REPORT_TEXT+=`RESULT: ${result}\n`;
+        
+        fs.writeFile('/bakerx/canary_report.txt', REPORT_TEXT, function (err) {
+            if (err) return console.log(err);
+            console.log('Report file has been saved!');
+        });
     }
 
     // TASK 1: 
@@ -78,6 +173,58 @@ class Production
       {
         let server = servers[this.curr_server_idx];
         console.log(`Saving data for ${server.name}. Last status code ${server.statusCode}`);
+        // latency, statusCode, memoryLoad, cpu, avgLoad
+        let score=0;
+        if(server.latency)
+        {
+            if(server.latency<50)
+               score+=1;
+            if(server.latencyList)
+            server.latencyList.push(server.cpu);
+            else
+            server.latencyList=[server.latency];
+        }
+        
+        if(server.statusCode)
+        {
+            if(server.statusCode==200)
+               score+=1;
+            if(server.statusCodeList && server.statusCode)
+                server.statusCodeList.push(server.statusCode);
+            else
+                server.statusCodeList=[server.statusCode];
+        }
+        
+        if(server.cpu)
+        {
+            if(server.cpu<50)
+               score+=1;
+            if(server.cpuList && server.cpu)
+                server.cpuList.push(server.cpu);
+            else
+                server.cpuList=[server.cpu];
+        } 
+        
+        if(server.memoryLoad)
+        {
+            if(server.memoryLoad<51)
+               score+=1;
+            if(server.memoryLoadList && server.memoryLoad)
+                server.memoryLoadList.push(server.memoryLoad);
+            else
+                server.memoryLoadList=[server.memoryLoad];
+        }
+        
+        if(server.avgLoad)
+        {
+            if(server.avgLoad<50)
+               score+=1;
+            if(server.avgLoadList && server.avgLoad)
+                server.avgLoadList.push(server.avgLoad);
+            else
+                server.avgLoadList=[server.avgLoad];
+        }
+        server.canaryScoreList.push(score);
         // const response = await got(this.TARGET, {throwHttpErrors: false});
         // let status = response.statusCode == 200 ? chalk.green(response.statusCode) : chalk.red(response.statusCode);
         // console.log( chalk`{grey Health check on ${this.TARGET}}: ${status}`);
@@ -105,6 +252,16 @@ async function run() {
         client.subscribe(server.name);
     }
     
+    //wait for blue server to start up
+    console.log('Waiting for blue server to start up');
+    let test_data={"markdown":"\n{NumberQuestions:true}\n-----------\nStart with header for global options:\n\n    {NumberQuestions:true}\n"};
+    await got.post(servers[0].url, {json: test_data, timeout: 600000, throwHttpErrors: false});
+    
+    console.log(chalk.keyword('pink')(`Starting proxy on ${PROXY_IP}:${PROXY_PORT}`));
+
+    var prod = new Production();
+    prod.proxy();
+    
     // When an agent has published information to a channel, we will receive notification here.
     client.on("message", function (channel, message) 
     {
@@ -118,26 +275,16 @@ async function run() {
             let payload = JSON.parse(message);
             server.memoryLoad = payload.memoryLoad;
             server.cpu = payload.cpu;
-            server.avgload = payload.avgload;
+            server.avgLoad = payload.avgload;
             // updateHealth(server);
         }
     });
-    //wait for blue server to start up
-    console.log('Waiting for blue server to start up');
-    let test_data={"markdown":"\n{NumberQuestions:true}\n-----------\nStart with header for global options:\n\n    {NumberQuestions:true}\n"};
-    await got.post(servers[0].url, {json: test_data, timeout: 5000, throwHttpErrors: false});
-    
-    console.log(chalk.keyword('pink')(`Starting proxy on ${PROXY_IP}:${PROXY_PORT}`));
-
-    let prod = new Production();
-    prod.proxy();
     
     // LATENCY CHECK
     var latency = setInterval( function () 
     {
         let server = servers[prod.curr_server_idx];
-        let now = Date.now();
-
+        
         // Bind a new variable in order to for it to be properly captured inside closure.
         let captureServer = server;
         

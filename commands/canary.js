@@ -2,6 +2,7 @@ const child = require('child_process');
 const chalk = require('chalk');
 const path = require('path');
 const os = require('os');
+const fs = require('fs');
 
 const scpSync = require('../lib/scp');
 const sshSync = require('../lib/ssh');
@@ -114,10 +115,45 @@ function setupProxy() {
         resolve(42);
     });
 }
+
+function checkReportFile() {
+    var reportFile = path.join(__dirname,'..','canary_report.txt');
+    // delete old canary report if already present 
+    fs.unlink(reportFile, (err) => {
+        if (err);
+        // else
+        //     console.log('file was deleted');
+    });
+    
+    var maxTries = 20; 
+    var tmins = 1; // change to 5
+    setTimeout(() => {    // wait for 2t mins
+        // check for report file generation on every 10 second
+        const checkReport = setInterval(function() {
+            const file = reportFile;
+            const fileExists = fs.existsSync(file);
+            maxTries--;
+            // console.log('Report Generated?: ', fileExists, maxTries);
+            process.stdout.write(".");
+            if (fileExists) {
+                console.log('\nReport Generated!');
+                console.log(fs.readFileSync(reportFile).toString());
+                clearInterval(checkReport);
+            }
+            if(maxTries==0)
+            {
+                console.log('\nReport Generation Failed!');
+                clearInterval(checkReport);
+            }
+        }, 10000);
+    }, 2*tmins*60*1000);
+}
   
 async function run(blueBranch, greenBranch) {
+    checkReportFile();
     await startServers();
-    await setupProxy();
     await setupBlue(blueBranch);
     await setupGreen(greenBranch);
+    await setupProxy();
+    process.stdout.write("Waiting for report");
 }
