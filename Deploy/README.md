@@ -51,7 +51,8 @@ In order to protect credentials, they're are managed using :
 ![img](../imgs/deploy_milestone_project_board.png)
 
 ## Screencast
-[Screencast Video](https://drive.google.com/open?id=1fCF1fJTuE-TnvXc0Pq80S0OMo9cfMXGD)
+### Infrastructure Setup and deploy
+[Screencast Video](https://drive.google.com/open?id=10xr9CroQKaouygwDfuINQtVspnDKBZ-i)
 
-### Screencast Canary Analysis
+### Canary Analysis
 [Screencast Canary Analysis](https://drive.google.com/file/d/1U8U6CY2q7i0SuAvkcd2FUDmq2jgQMvxL/view?usp=sharing)

@@ -39,6 +39,6 @@ async function run() {
       console.log(chalk.blueBright('Running ansible script for Monitoring...'));
       result = sshSync(`sudo /bakerx/pipeline/run-ansible.sh /bakerx/monitor/playbook.yml /bakerx/inventory.ini`, `vagrant@${JENKINS_IP}`);
       if( result.error ) { process.exit( result.status ); }
-    }, 15000);
+    }, 60000);
 
 }
